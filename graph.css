@@ -1,0 +1,25 @@
+text {
+    text-anchor: middle;
+    /*fill: darkslategrey;*/
+}
+
+.title {
+    font-weight: bold;
+    font-size: 1.25em;
+}
+
+.legend_item {
+    text-anchor: start;
+    font-weight: normal;
+    font-size: 1em;
+}
+
+.axis_title {
+    font-weight: bold;
+}
+
+circle.point {
+    stroke: green;
+    stroke-width: 0.2em;
+    fill: yellow;
+}
