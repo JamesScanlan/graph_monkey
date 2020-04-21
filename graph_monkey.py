@@ -2,6 +2,7 @@ import svg_graph
 import datetime
 import data_items_converter
 from web_page_creator import WebPageCreator
+from csv_file_reader import CSVFileReader
 
 # file:///home/james/Documents/Code/Python/conviva/graph_output.html
 
@@ -48,8 +49,23 @@ def graph_four(graph):
     x_values = __convert_str_to_dates(['5/3/2020','6/3/2020','7/3/2020','8/3/2020','9/3/2020'])
     y_values = [1,4,2,9,4]
     graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values, "Tigers"))
+
     graph.x_axis_title = 'Dates'
     graph.y_axis_title = 'Count of Something'
+
+def graph_five(graph):
+    reader = CSVFileReader()
+    graph.title = 'BAD_HTTP_STATUS by day'
+
+    days = ['Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday','Monday']
+    for day in days:
+        reader.read_file('data/' + day + '.csv')
+        x_values = reader.get_x_values()
+        y_values = reader.get_y_values()
+        graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values, day))
+
+    graph.x_axis_title = 'Time'
+    graph.y_axis_title = 'Count of Errors'
 
 if __name__== "__main__":
 
@@ -61,7 +77,8 @@ if __name__== "__main__":
     #graph_one(graph)
     #graph_two(graph)
     #graph_three(graph)
-    graph_four(graph)
+    #graph_four(graph)
+    graph_five(graph)
 
     graph.draw_graph()
 

@@ -3,7 +3,10 @@ from svg_point import Point
 import bubblesort
 import datetime
 from date_axis_labels_creator import DateAxisLabelsCreator
+from datetime_axis_labels_creator import DateTimeAxisLabelsCreator
+from time_value_axis_labels_creator import TimeValueAxisLabelsCreator
 from int_axis_labels_creator import IntAxisLabelsCreator
+from time_value import TimeValue
 from axis import Axis
 from data_sets import DataSets
 from colours_palete import ColoursPalete
@@ -44,6 +47,10 @@ class Graph(object):
             self.__draw_x_axis_for_int()
         if self.x_axis.data_type is datetime.date:
             self.__draw_x_axis_for_date()
+        if self.x_axis.data_type is datetime.datetime:
+            self.__draw_x_axis_for_datetime()
+        if self.x_axis.data_type is TimeValue:
+            self.__draw_x_axis_for_time_value()
 
     def __draw_x_axis_for_int(self):
         start_point = Point(self.left_margin, self.bottom_margin + self.height)
@@ -75,11 +82,47 @@ class Graph(object):
                 self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label))
         self.__draw_x_axis_title()
 
+    def __draw_x_axis_for_datetime(self):
+        start_point = Point(self.left_margin, self.bottom_margin + self.height)
+        end_point = Point(self.left_margin + self.width, self.bottom_margin + self.height)
+        self.svg_contents += svg_monkey.write_line(start_point, end_point)
+
+        if self.x_axis.markers != None:
+            for counter in range(0, len(self.x_axis.markers)):
+                start_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.bottom_margin + self.height)
+                end_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.bottom_margin + self.height + 15)
+                self.svg_contents += svg_monkey.write_line(start_point, end_point)
+
+                start_point = Point(self.left_margin -5 + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.bottom_margin + self.height + 30)
+                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label))
+        self.__draw_x_axis_title()
+
+    def __draw_x_axis_for_time_value(self):
+        start_point = Point(self.left_margin, self.bottom_margin + self.height)
+        end_point = Point(self.left_margin + self.width, self.bottom_margin + self.height)
+        self.svg_contents += svg_monkey.write_line(start_point, end_point)
+
+        if self.x_axis.markers != None:
+            for counter in range(0, len(self.x_axis.markers)):
+                start_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.bottom_margin + self.height)
+                end_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.bottom_margin + self.height + 15)
+                self.svg_contents += svg_monkey.write_line(start_point, end_point)
+
+                start_point = Point(self.left_margin -5 + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.bottom_margin + self.height + 30)
+                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label))
+        self.__draw_x_axis_title()
+
+
+
     def __draw_y_axis(self):
         if self.y_axis.data_type is int:
             self.__draw_y_axis_for_int()
         if self.y_axis.data_type is datetime.date:
             self.__draw_y_axis_for_date()
+        if self.y_axis.data_type is datetime.datetime:
+            self.__draw_y_axis_for_datetime()
+        if self.y_axis.data_type is TimeValue:
+            self.__draw_y_axis_for_time_value()
     
     def __draw_y_axis_for_int(self):
         start_point = Point(self.left_margin, self.bottom_margin + self.height)
@@ -111,6 +154,36 @@ class Graph(object):
                 self.svg_contents += svg_monkey.write_text(label_point, str(self.y_axis.markers[counter].label))
         self.__draw_y_axis_title(150)
 
+    def __draw_y_axis_for_datetime(self):
+        start_point = Point(self.left_margin, self.bottom_margin + self.height)
+        end_point = Point(self.left_margin, self.bottom_margin)
+        self.svg_contents += svg_monkey.write_line(start_point, end_point)
+
+        if self.y_axis.markers != None:
+            for counter in range(0, len(self.y_axis.markers)):
+                start_point = Point(self.left_margin, (self.bottom_margin + self.height) - ((counter / (len(self.y_axis.markers) - 1)) * self.height))
+                end_point = Point(self.left_margin - 15, (self.bottom_margin + self.height) - ((counter / (len(self.y_axis.markers) - 1)) * self.height))
+                self.svg_contents += svg_monkey.write_line(start_point, end_point)
+
+                label_point = Point(self.left_margin - 75, (self.bottom_margin + self.height) - ((counter / (len(self.y_axis.markers) - 1)) * self.height) + 5)
+                self.svg_contents += svg_monkey.write_text(label_point, str(self.y_axis.markers[counter].label))
+        self.__draw_y_axis_title(150)
+
+    def __draw_y_axis_for_time_value(self):
+        start_point = Point(self.left_margin, self.bottom_margin + self.height)
+        end_point = Point(self.left_margin, self.bottom_margin)
+        self.svg_contents += svg_monkey.write_line(start_point, end_point)
+
+        if self.y_axis.markers != None:
+            for counter in range(0, len(self.y_axis.markers)):
+                start_point = Point(self.left_margin, (self.bottom_margin + self.height) - ((counter / (len(self.y_axis.markers) - 1)) * self.height))
+                end_point = Point(self.left_margin - 15, (self.bottom_margin + self.height) - ((counter / (len(self.y_axis.markers) - 1)) * self.height))
+                self.svg_contents += svg_monkey.write_line(start_point, end_point)
+
+                label_point = Point(self.left_margin - 75, (self.bottom_margin + self.height) - ((counter / (len(self.y_axis.markers) - 1)) * self.height) + 5)
+                self.svg_contents += svg_monkey.write_text(label_point, str(self.y_axis.markers[counter].label))
+        self.__draw_y_axis_title(150)
+
     def __translate_data_to_points(self, data_set):
         points = []
         for data_item in data_set:
@@ -127,10 +200,14 @@ class Graph(object):
         return lowest_value, highest_value
 
     def __get_value_type(self, value):
-        if isinstance(value, int) == True:
+        if type(value) is int:
             return int
-        elif isinstance(value, datetime.date) == True:
+        elif type(value) is datetime.datetime:
+            return datetime.datetime
+        elif type(value) is datetime.date:
             return datetime.date
+        elif type(value) is TimeValue:
+            return TimeValue
         else:
             return None
 
@@ -175,17 +252,31 @@ class Graph(object):
         lowest_value = self.__round_int_down(lowest_value, raw_range)
         return int, lowest_value, highest_value
 
+    def __set_axis_for_datetime(self, lowest_value, highest_value):
+        raw_range = highest_value - lowest_value
+        lowest_value = self.__round_date_down(lowest_value, raw_range)
+        return datetime.datetime, lowest_value, highest_value
+
     def __set_axis_for_date(self, lowest_value, highest_value):
         raw_range = highest_value - lowest_value
         lowest_value = self.__round_date_down(lowest_value, raw_range)
         return datetime.date, lowest_value, highest_value
 
+    def __set_axis_for_time_value(self, lowest_value, highest_value):
+        raw_range = highest_value - lowest_value
+        lowest_value = self.__round_date_down(lowest_value, raw_range)
+        return TimeValue, lowest_value, highest_value
+
     def __evaluate_axis_data_by_type(self, lowest_value, highest_value):
         t = self.__get_value_type(lowest_value)
         if t is int:
             return self.__set_axis_for_int(lowest_value, highest_value)
+        if t is datetime.datetime:
+            return self.__set_axis_for_datetime(lowest_value, highest_value)
         if t is datetime.date:
             return self.__set_axis_for_date(lowest_value, highest_value)
+        if t is TimeValue:
+            return self.__set_axis_for_time_value(lowest_value, highest_value)
         return None
 
     def __print_out_values(self):
@@ -227,6 +318,10 @@ class Graph(object):
             self.x_axis.markers = IntAxisLabelsCreator(self.x_axis.low, self.x_axis.high).axis_labels
         elif x_data_type is datetime.date:
             self.x_axis.markers = DateAxisLabelsCreator(self.x_axis.low, self.x_axis.high).axis_labels
+        elif x_data_type is datetime.datetime:
+            self.x_axis.markers = DateTimeAxisLabelsCreator(self.x_axis.low, self.x_axis.high).axis_labels
+        elif x_data_type is TimeValue:
+            self.x_axis.markers = TimeValueAxisLabelsCreator(self.x_axis.low, self.x_axis.high).axis_labels
 
         self.__revise_x_high_low()
 
@@ -234,6 +329,10 @@ class Graph(object):
             self.y_axis.markers = IntAxisLabelsCreator(self.y_axis.low, self.y_axis.high).axis_labels
         elif y_data_type is datetime.date:
             self.y_axis.markers = DateAxisLabelsCreator(self.y_axis.low, self.y_axis.high).axis_labels
+        elif y_data_type is datetime.datetime:
+            self.y_axis.markers = DateTimeAxisLabelsCreator(self.y_axis.low, self.y_axis.high).axis_labels
+        elif y_data_type is TimeValue:
+            self.y_axis.markers = TimeValueAxisLabelsCreator(self.y_axis.low, self.y_axis.high).axis_labels
 
         self.__revise_y_high_low()
 
