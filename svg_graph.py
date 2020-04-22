@@ -103,7 +103,7 @@ class Graph(object):
         self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
         if self.x_axis.markers != None:
-            for counter in range(0, len(self.x_axis.markers)):
+            for counter in range(0, len(self.x_axis.markers),75):
                 start_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.bottom_margin + self.height)
                 end_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.bottom_margin + self.height + 15)
                 self.svg_contents += svg_monkey.write_line(start_point, end_point)
@@ -130,7 +130,7 @@ class Graph(object):
         self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
         if self.y_axis.markers != None:
-            for counter in range(0, len(self.y_axis.markers)):
+            for counter in range(0, len(self.y_axis.markers), 100):
                 start_point = Point(self.left_margin, (self.bottom_margin + self.height) - (((self.y_axis.markers[counter].value - self.y_axis.low) / (self.y_axis.high - self.y_axis.low)) * self.height))
                 end_point = Point(self.left_margin -15, (self.bottom_margin + self.height) - (((self.y_axis.markers[counter].value - self.y_axis.low) / (self.y_axis.high - self.y_axis.low)) * self.height))
                 self.svg_contents += svg_monkey.write_line(start_point, end_point)
@@ -336,9 +336,10 @@ class Graph(object):
 
         self.__revise_y_high_low()
 
-    def __write_point_markers(self, points, color="", label = ""):
+    def __write_point_markers(self, points, display_markers=True, color="", label = ""):
         for point in points:
-            self.svg_contents += svg_monkey.write_circle(point, 4, color)
+            if display_markers == True:
+                self.svg_contents += svg_monkey.write_circle(point, 4, color)
         self.svg_contents += svg_monkey.write_text(Point(point.x + 10, point.y + 5), label, 0, 'legend_item', color)
 
     def __set_axes_titles(self):
@@ -373,7 +374,7 @@ class Graph(object):
             colour = colours_palete.get_next_colour()
             points = self.__translate_data_to_points(data_set)
             self.svg_contents += svg_monkey.write_lines(points, colour)
-            self.__write_point_markers(points, colour, data_set.name)
+            self.__write_point_markers(points, False, colour, data_set.name)
 
         self.svg_contents += svg_monkey.write_svg_end()
 

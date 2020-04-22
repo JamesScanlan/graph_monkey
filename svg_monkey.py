@@ -41,7 +41,7 @@ def write_lines(points, color='black'):
     output = '<polyline points="'
     for point in points:
         output += str(point.x) + ',' + str(point.y) + ' '
-    output += '" style="fill:none;stroke:' + color + ';stroke-width:2" />'
+    output += '" style="fill:none;stroke:' + color + ';stroke-width:1" />'
     #<polyline points="20,20 40,25 60,40 80,120 120,140 200,180" style="fill:none;stroke:black;stroke-width:3" />
     return output
 

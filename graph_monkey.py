@@ -57,7 +57,7 @@ def graph_five(graph):
     reader = CSVFileReader()
     graph.title = 'BAD_HTTP_STATUS by day'
 
-    days = ['Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday','Monday']
+    days = ['Tuesday_14_April','Wednesday_15_April','Thursday_16_April','Friday_17_April','Saturday_18_April','Sunday_19_April','Monday_20_April','Tuesday_21_April']
     for day in days:
         reader.read_file('data/' + day + '.csv')
         x_values = reader.get_x_values()
