@@ -11,7 +11,15 @@ text {
 .legend_item {
     text-anchor: start;
     font-weight: normal;
-    font-size: 1em;
+    font-size: 0.8em;
+    text-anchor: start;
+}
+
+.legend_item.title {
+    text-anchor: start;
+    font-weight: bold;
+    font-size: 0.8em;
+    text-anchor: start;
 }
 
 .axis_title {
@@ -22,4 +30,8 @@ circle.point {
     stroke: green;
     stroke-width: 0.2em;
     fill: yellow;
+}
+
+polyline {
+    stroke-width: 1;
 }

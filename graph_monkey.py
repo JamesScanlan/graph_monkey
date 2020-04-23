@@ -54,15 +54,18 @@ def graph_four(graph):
     graph.y_axis_title = 'Count of Something'
 
 def graph_five(graph):
-    reader = CSVFileReader()
+    
     graph.title = 'BAD_HTTP_STATUS by day'
-
-    days = ['Tuesday_14_April','Wednesday_15_April','Thursday_16_April','Friday_17_April','Saturday_18_April','Sunday_19_April','Monday_20_April','Tuesday_21_April']
+    #'Tuesday_14_April',
+    days = ['Wednesday_15_April','Thursday_16_April','Friday_17_April','Saturday_18_April','Sunday_19_April','Monday_20_April','Tuesday_21_April']
     for day in days:
+        reader = CSVFileReader()
         reader.read_file('data/' + day + '.csv')
         x_values = reader.get_x_values()
         y_values = reader.get_y_values()
         graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values, day))
+        x_values = None
+        y_values = None
 
     graph.x_axis_title = 'Time'
     graph.y_axis_title = 'Count of Errors'
@@ -83,7 +86,7 @@ if __name__== "__main__":
     graph.draw_graph()
 
     web_page_creator.add_contents(graph.svg_contents)
-    web_page_creator.add_contents(graph.draw_legend())
+    #web_page_creator.add_contents(graph.draw_legend())
 
     with open("graph_output.html", "w") as file:
         file.write(web_page_creator.create_contents())

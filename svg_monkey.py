@@ -1,7 +1,7 @@
 from svg_point import Point
-
+#viewBox="0 0 100 100"
 def write_svg_start(width, height):
-    return '<svg width="' + str(width) + '" height="' + str(height) + '">'
+    return '<svg viewBox="0 0 ' + str(width) + ' ' + str(height) + '">'
 
 def write_svg_end():
     return '</svg>'
@@ -28,40 +28,26 @@ def write_text(point, text, text_angle = 0, css_class = '', color='black'):
     return output
      
   
-def write_line(start_point, end_point):
+def write_line(start_point, end_point, colour = 'Black'):
     output = '<line '
     output += 'x1="' + str(start_point.x) + '" '
     output += 'y1="' + str(start_point.y) + '" '
     output += 'x2="' + str(end_point.x) + '" '
     output += 'y2="' + str(end_point.y) + '" '
-    output += 'style="stroke:rgb(0,0,0);stroke-width:2" />'
+    output += 'style="stroke:' + colour + ';stroke-width:1" />'
     return output
     
 def write_lines(points, color='black'):
     output = '<polyline points="'
+    first = True
     for point in points:
-        output += str(point.x) + ',' + str(point.y) + ' '
-    output += '" style="fill:none;stroke:' + color + ';stroke-width:1" />'
-    #<polyline points="20,20 40,25 60,40 80,120 120,140 200,180" style="fill:none;stroke:black;stroke-width:3" />
+        if first == True:
+            first = False
+        else:
+            output += ' '
+        output += str(point.x) + ',' + str(point.y)
+    output +='" '
+    output += ' fill="none" '
+    output += ' stroke="' + color + '" '
+    output += '/>'
     return output
-
-# def write_file(file_name):
-#     output = write_html_start()
-#     output += write_body_start()
-
-#     output += write_svg_start(500, 250)
-
-#     output += write_circle() 
-   
-#     output += write_line(Point(0, 0), Point(200, 200))
-
-#     output += write_svg_end()
-
-#     output += write_body_end()
-#     output += write_html_end()
-
-#     with open(file_name, "w") as file:
-#         file.write(output)
-
-# if __name__== "__main__":
-#     write_file("output.html")

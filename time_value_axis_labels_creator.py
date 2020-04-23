@@ -7,7 +7,7 @@ class TimeValueAxisLabelsCreator(AxisLabelsCreator):
     def __init__(self, low, high):
         super().__init__(low, high)
         self.__set_axis_labels()
-        self.__display_axis_labels()
+        #self.__display_axis_labels()
 
     def __deterimine_interval(self, reference_time, time_range):
         interval = 'Minute'
@@ -37,10 +37,7 @@ class TimeValueAxisLabelsCreator(AxisLabelsCreator):
         calculated_hour = reference_datetime.hour
         calculated_minute = reference_datetime.minute
                 
-        if calculated_hour >= 23:
-            calculated_hour =0 
-        else:
-            calculated_hour += 1
+        calculated_hour += 1
         
         return TimeValue(calculated_hour, calculated_minute)
 

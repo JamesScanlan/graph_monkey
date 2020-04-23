@@ -103,7 +103,7 @@ class Graph(object):
         self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
         if self.x_axis.markers != None:
-            for counter in range(0, len(self.x_axis.markers),75):
+            for counter in range(0, len(self.x_axis.markers)):#,75
                 start_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.bottom_margin + self.height)
                 end_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.bottom_margin + self.height + 15)
                 self.svg_contents += svg_monkey.write_line(start_point, end_point)
@@ -130,7 +130,7 @@ class Graph(object):
         self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
         if self.y_axis.markers != None:
-            for counter in range(0, len(self.y_axis.markers), 100):
+            for counter in range(0, len(self.y_axis.markers)): #, 100
                 start_point = Point(self.left_margin, (self.bottom_margin + self.height) - (((self.y_axis.markers[counter].value - self.y_axis.low) / (self.y_axis.high - self.y_axis.low)) * self.height))
                 end_point = Point(self.left_margin -15, (self.bottom_margin + self.height) - (((self.y_axis.markers[counter].value - self.y_axis.low) / (self.y_axis.high - self.y_axis.low)) * self.height))
                 self.svg_contents += svg_monkey.write_line(start_point, end_point)
@@ -186,11 +186,16 @@ class Graph(object):
 
     def __translate_data_to_points(self, data_set):
         points = []
+        # loop_counter = 0
         for data_item in data_set:
-            x = self.left_margin + (((data_item.key - self.x_axis.low) / (self.x_axis.high - self.x_axis.low)) * self.width)
-            y = self.bottom_margin + self.height - ((((data_item.value - self.y_axis.low) / (self.y_axis.high - self.y_axis.low)) * self.height))
+            x = self.left_margin + round((((data_item.key - self.x_axis.low) / (self.x_axis.high - self.x_axis.low)) * self.width),2)
+            y = self.bottom_margin + round(self.height - ((((data_item.value - self.y_axis.low) / (self.y_axis.high - self.y_axis.low)) * self.height)), 2)
             point = Point(x, y)
             points.append(point)
+
+            # loop_counter += 1
+            # if loop_counter == 20:
+            #     break
         return points
 
     def __get_lowest_and_highest(self, values):
@@ -336,11 +341,12 @@ class Graph(object):
 
         self.__revise_y_high_low()
 
-    def __write_point_markers(self, points, display_markers=True, color="", label = ""):
+    def __write_point_markers(self, points, display_markers=True, display_labels=True, color="", label = ""):
         for point in points:
             if display_markers == True:
                 self.svg_contents += svg_monkey.write_circle(point, 4, color)
-        self.svg_contents += svg_monkey.write_text(Point(point.x + 10, point.y + 5), label, 0, 'legend_item', color)
+        if display_labels == True:
+            self.svg_contents += svg_monkey.write_text(Point(point.x + 10, point.y + 5), label, 0, 'legend_item', color)
 
     def __set_axes_titles(self):
         if self.x_axis != None:
@@ -349,14 +355,18 @@ class Graph(object):
             self.y_axis.title = self.y_axis_title
 
     def __draw_legend(self):
-        contents = ""
-        point = Point(20, 20)
-        contents += svg_monkey.write_text(point, 'Legend', 0, 'legend_item')
+        contents = ''
         
+        colours_palete = ColoursPalete()
         spacer = 20
+        left = self.left_margin + self.width
+
+        contents += svg_monkey.write_text(Point(left, self.bottom_margin), 'Legend', 0, 'legend_item_title')
+
         for data_set in self.data_sets:
-            point = Point(20, 20 + spacer)
-            contents += svg_monkey.write_text(point, data_set.name)
+            colour = colours_palete.get_next_colour()
+            contents += svg_monkey.write_line(Point(left - 30,self.bottom_margin + spacer - 3), Point(left -10,self.bottom_margin + spacer - 3), colour)
+            contents += svg_monkey.write_text(Point(left, self.bottom_margin + spacer), data_set.name, 0, 'legend_item', colour)
             spacer += 20
         return contents
 
@@ -374,14 +384,16 @@ class Graph(object):
             colour = colours_palete.get_next_colour()
             points = self.__translate_data_to_points(data_set)
             self.svg_contents += svg_monkey.write_lines(points, colour)
-            self.__write_point_markers(points, False, colour, data_set.name)
+            self.__write_point_markers(points, False, False, colour, data_set.name)
+
+        self.svg_contents += self.__draw_legend()
 
         self.svg_contents += svg_monkey.write_svg_end()
 
-    def draw_legend(self):
-        legend = svg_monkey.write_svg_start(300, 500)
-        legend += self.__draw_legend()
-        legend += svg_monkey.write_svg_end()
-        return legend
+    # def __draw_legend(self):
+    #     #legend = svg_monkey.write_svg_start(300, 500)
+    #     legend = self.__draw_legend()
+    #     #legend += svg_monkey.write_svg_end()
+    #     return legend
 
 

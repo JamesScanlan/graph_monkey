@@ -11,7 +11,7 @@ class TimeValue(object):
     def __sub__(self, other_time_value):
         self_as_minutes = self.total_minutes()
         other_as_minutes = other_time_value.total_minutes()
-        result = other_as_minutes - self_as_minutes
+        result = self_as_minutes - other_as_minutes 
         return datetime.timedelta(minutes = result)
 
     def __str__(self):
