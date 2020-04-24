@@ -1,6 +1,13 @@
+
+
 text {
     text-anchor: middle;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     /*fill: darkslategrey;*/
+}
+
+.axis_label {
+    font-size: 0.8em;
 }
 
 .title {

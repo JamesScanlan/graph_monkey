@@ -16,7 +16,7 @@ def graph_one(graph):
     graph.title = 'Integers against Integers'
     x_values = [1,3,6,7,4,9,10]
     y_values = [0,2,3,2,8,3,10]
-    graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values))
+    graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values,'Test data'))
     graph.x_axis_title = "Number of Widgets"
     graph.y_axis_title = 'Count of Something'
 
@@ -24,7 +24,7 @@ def graph_two(graph):
     graph.title = 'Dates against integers'
     x_values = __convert_str_to_dates(['1/3/2020','2/3/2020','3/3/2020','4/3/2020','5/3/2020','6/3/2020','7/3/2020'])
     y_values = [0,2,3,2,8,3,10]
-    graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values))
+    graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values,'Test data'))
     graph.x_axis_title = 'Dates'
     graph.y_axis_title = 'Count of Something'
 
@@ -32,7 +32,7 @@ def graph_three(graph):
     graph.title = 'Dates against Dates'
     x_values = __convert_str_to_dates(['1/3/2020','2/3/2020','3/3/2020','4/3/2020','5/3/2020','6/3/2020','7/3/2020'])
     y_values = __convert_str_to_dates(['1/3/2020','2/3/2020','3/3/2020','4/3/2020','5/3/2020','6/3/2020','7/3/2020'])
-    graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values))
+    graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values, 'Some dates'))
     graph.x_axis_title = 'Dates'
     graph.y_axis_title = 'Dates'
 
@@ -56,8 +56,8 @@ def graph_four(graph):
 def graph_five(graph):
     
     graph.title = 'BAD_HTTP_STATUS by day'
-    #'Tuesday_14_April',
-    days = ['Wednesday_15_April','Thursday_16_April','Friday_17_April','Saturday_18_April','Sunday_19_April','Monday_20_April','Tuesday_21_April']
+    #'Tuesday_14_April','Wednesday_15_April','Thursday_16_April',
+    days = ['Friday_17_April','Saturday_18_April','Sunday_19_April','Monday_20_April','Tuesday_21_April','Wednesday_22_April','Thursday_23_April']
     for day in days:
         reader = CSVFileReader()
         reader.read_file('data/' + day + '.csv')
@@ -76,6 +76,7 @@ if __name__== "__main__":
     web_page_creator.add_stylesheet('graph.css')
 
     graph = svg_graph.Graph(600, 1200)
+    #graph = svg_graph.Graph('90%', '90%')
     
     #graph_one(graph)
     #graph_two(graph)

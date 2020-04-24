@@ -14,7 +14,10 @@ class IntAxisLabelsCreator(AxisLabelsCreator):
         return padding
 
     def __determine_interval(self, low_value, value_range):
-        return int("1" + self.__zero_pad(len(str(value_range)) -1))
+        if value_range <= 25:
+            return 1
+        else:
+            return int("1" + self.__zero_pad(len(str(value_range)) -1))
         
     def __set_axis_labels(self):
         value_range = self.high - self.low
