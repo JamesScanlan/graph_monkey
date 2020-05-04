@@ -3,6 +3,7 @@ import datetime
 import data_items_converter
 from web_page_creator import WebPageCreator
 from csv_file_reader import CSVFileReader
+from yaml_config_reader import YAMLConfigReader
 
 # file:///home/james/Documents/Code/Python/conviva/graph_output.html
 
@@ -56,8 +57,8 @@ def graph_four(graph):
 def graph_five(graph):
     
     graph.title = 'BAD_HTTP_STATUS by day'
-    #'Tuesday_14_April','Wednesday_15_April','Thursday_16_April',
-    days = ['Friday_17_April','Saturday_18_April','Sunday_19_April','Monday_20_April','Tuesday_21_April','Wednesday_22_April','Thursday_23_April']
+    #'Tuesday_14_April','Wednesday_15_April','Thursday_16_April','Friday_17_April','Saturday_18_April','Sunday_19_April','Monday_20_April','Tuesday_21_April', 'Wednesday_22_April',
+    days = ['Thursday_23_April','Friday_24_April','Saturday_25_April','Sunday_26_April','Monday_27_April','Tuesday_28_April','Wednesday_29_April']
     for day in days:
         reader = CSVFileReader()
         reader.read_file('data/' + day + '.csv')
@@ -68,6 +69,23 @@ def graph_five(graph):
         y_values = None
 
     graph.x_axis_title = 'Time'
+    graph.y_axis_title = 'Count of Errors'
+
+def graph_six(graph):
+    
+    config = YAMLConfigReader()
+    config.read_file('data/034_errors.yaml')
+
+    graph.title = "034_STREAM_POS"
+    reader = CSVFileReader()
+    reader.read_file(config.file_name, config.x_axis_config, config.y_axis_config)
+    x_values = reader.get_x_values()
+    for y_values in reader.get_y_values():
+        graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values, y_values.name))
+    x_values = None
+    y_values = None
+
+    graph.x_axis_title = 'Date'
     graph.y_axis_title = 'Count of Errors'
 
 if __name__== "__main__":
@@ -82,7 +100,9 @@ if __name__== "__main__":
     #graph_two(graph)
     #graph_three(graph)
     #graph_four(graph)
-    graph_five(graph)
+    #graph_five(graph)
+
+    graph_six(graph)
 
     graph.draw_graph()
 

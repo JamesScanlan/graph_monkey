@@ -57,7 +57,7 @@ class DateAxisLabelsCreator(AxisLabelsCreator):
 
         else:
             if reference_date.day == 31:
-                current_day = 1
+                calculated_day = 1
                 if reference_date.month == 12:
                     calculated_month = 1
                     calculated_year +=1

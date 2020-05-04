@@ -218,26 +218,30 @@ class Graph(object):
 
     #this logic needs improving
     def __round_int_down(self, value, raw_range):
-        value_digit_count = len(str(value))
-        raw_range_digit_count = len(str(value))
-        interval = 0
-        if value_digit_count == raw_range_digit_count:
-            interval = value_digit_count
-        else:
-            interval = value_digit_count
+        print(value, raw_range)
+        # value_digit_count = len(str(value))
+        # raw_range_digit_count = len(str(value))
+        # interval = 0
+        # if value_digit_count == raw_range_digit_count:
+        #     interval = value_digit_count
+        # else:
+        #     interval = value_digit_count
 
-        revised_value = value
+        # revised_value = value
         
-        if (interval == 1 and value == 0) == False:
-            exit_loop = False
+        # if (interval == 1 and value == 0) == False:
+        #     exit_loop = False
             
-            while exit_loop == False:
-                revised_value -= interval
-                if revised_value == 0:
-                    exit_loop = True
-                elif revised_value % interval == 0:
-                    exit_loop = True
-          
+        #     while exit_loop == False:
+        #         revised_value -= interval
+        #         if revised_value == 0:
+        #             exit_loop = True
+        #         elif revised_value % interval == 0:
+        #             exit_loop = True
+        revised_value = value
+        if int(str(revised_value)[len(str(revised_value))-1]) != 0:
+            revised_value = int(str(revised_value)[0:len(str(revised_value))-1] + '0')
+
         return revised_value
     
     def __round_date_down(self, value, raw_range):
@@ -250,27 +254,6 @@ class Graph(object):
         else:
             #days
             return value #+ datetime.timedelta(-1)
-
-    # def __set_axis_for_int(self, lowest_value, highest_value):
-    #     #need to round down and up lowest and highest
-    #     raw_range = highest_value - lowest_value
-    #     lowest_value = self.__round_int_down(lowest_value, raw_range)
-    #     return int, lowest_value, highest_value
-
-    # def __set_axis_for_datetime(self, lowest_value, highest_value):
-    #     raw_range = highest_value - lowest_value
-    #     lowest_value = self.__round_date_down(lowest_value, raw_range)
-    #     return datetime.datetime, lowest_value, highest_value
-
-    # def __set_axis_for_date(self, lowest_value, highest_value):
-    #     raw_range = highest_value - lowest_value
-    #     lowest_value = self.__round_date_down(lowest_value, raw_range)
-    #     return datetime.date, lowest_value, highest_value
-
-    # def __set_axis_for_time_value(self, lowest_value, highest_value):
-    #     raw_range = highest_value - lowest_value
-    #     lowest_value = self.__round_date_down(lowest_value, raw_range)
-    #     return TimeValue, lowest_value, highest_value
 
     def __round_down(self, value_type, lowest_value, raw_range):
         if value_type is int:
@@ -285,15 +268,6 @@ class Graph(object):
         raw_range = highest_value - lowest_value
         lowest_value = self.__round_down(t, lowest_value, raw_range)
         return t, lowest_value, highest_value
-        # if t is int:
-        #     return self.__set_axis_for_int(lowest_value, highest_value)
-        # if t is datetime.datetime:
-        #     return self.__set_axis_for_datetime(lowest_value, highest_value)
-        # if t is datetime.date:
-        #     return self.__set_axis_for_date(lowest_value, highest_value)
-        # if t is TimeValue:
-        #     return self.__set_axis_for_time_value(lowest_value, highest_value)
-        # return None
 
     def __print_out_values(self):
         for counter in range(0, len(self.x_values)):
