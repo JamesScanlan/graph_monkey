@@ -23,10 +23,10 @@ class DateTimeAxisLabelsCreator(AxisLabelsCreator):
                 interval = "Month"
         return interval
 
-    def __determine_interval_date_for_year_increment(self, reference_date):
+    def __determine_interval_for_year_increment(self, reference_date):
         return datetime.date(reference_date.year + 1, 1, 1)
         
-    def __determine_interval_date_for_month_increment(self, reference_date):
+    def __determine_interval_for_month_increment(self, reference_date):
         calculated_month = reference_date.month
         calculated_year = reference_date.year
 
@@ -38,7 +38,7 @@ class DateTimeAxisLabelsCreator(AxisLabelsCreator):
 
         return datetime.date(calculated_year, calculated_month, 1)
 
-    def __determine_interval_date_for_day_increment(self, reference_date):
+    def __determine_interval_for_day_increment(self, reference_date):
         calculated_day = reference_date.day
         calculated_month = reference_date.month
         calculated_year = reference_date.year
@@ -72,7 +72,7 @@ class DateTimeAxisLabelsCreator(AxisLabelsCreator):
             else:
                 calculated_day += 1
         
-        return datetime.date(calculated_year, calculated_month, calculated_day)
+        return datetime.datetime(calculated_year, calculated_month, calculated_day, reference_date.hour, reference_date.minute)
 
     def __determine_interval_for_minute_increment(self, reference_datetime):
 
@@ -155,17 +155,17 @@ class DateTimeAxisLabelsCreator(AxisLabelsCreator):
         return datetime.datetime(calculated_year, calculated_month, calculated_day, calculated_hour, calculated_minute)
 
 
-    def __get_next_interval_date(self, reference_datetime, interval):
+    def __get_next_interval_datetime(self, reference_datetime, interval):
         if interval == "Minute":
             return self.__determine_interval_for_minute_increment(reference_datetime)
         elif interval == "Hour":
             return self.__determine_interval_for_hour_increment(reference_datetime)
         elif interval == "Day":
-            return self.__determine_interval_date_for_day_increment(reference_datetime)
+            return self.__determine_interval_for_day_increment(reference_datetime)
         elif interval == "Month":
-            return self.__determine_interval_date_for_month_increment(reference_datetime)
+            return self.__determine_interval_for_month_increment(reference_datetime)
         else:
-            return self.__determine_interval_date_for_year_increment(reference_datetime)
+            return self.__determine_interval_for_year_increment(reference_datetime)
 
     def __set_axis_labels(self):
         date_range = self.high - self.low
@@ -178,7 +178,7 @@ class DateTimeAxisLabelsCreator(AxisLabelsCreator):
         
         exit_loop = False
         while exit_loop == False:
-            increment_datetime = self.__get_next_interval_date(current_datetime, interval)
+            increment_datetime = self.__get_next_interval_datetime(current_datetime, interval)
 
             axis_labels.append(AxisLabel(increment_datetime, increment_datetime.strftime("%d/%m/%Y %H:%M")))
             

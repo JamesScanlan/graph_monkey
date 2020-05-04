@@ -15,24 +15,11 @@ class CSVFileReader(object):
     def get_y_values(self):
         return self.__y_values
 
-    # def read_file(self, file_name):
-    #     with open(file_name, newline='') as csvfile:
-    #         reader = csv.reader(csvfile, delimiter=',')
-    #         first_row = True
-    #         for row in reader:
-    #             if first_row == True:
-    #                 first_row = False
-    #             else:
-    #                 d = datetime.datetime.strptime(row[0],'%d/%m/%Y %H:%M') 
-    #                 self.__x_values.append(TimeValue(d.hour, d.minute))
-    #                 self.__y_values.append(int(row[1]))
-
     def read_file(self, file_name, x_axis_config, y_axis_config):
         with open(file_name, newline='') as csvfile:
             reader = csv.reader(csvfile, delimiter=',')
             first_row = True
 
-            #set up columns to write to
             y_values = {}
             for y_axis_config_item in y_axis_config.axis_config_items:
                 y_values[y_axis_config_item.name] = CSVValues(y_axis_config_item.name)
@@ -44,7 +31,7 @@ class CSVFileReader(object):
                     self.__x_values.append(self.__parse_value(row[x_axis_config.axis_config_items[0].index], x_axis_config.datatype, x_axis_config.format))
                     for y_axis_config_item in y_axis_config.axis_config_items:
                         y_values[y_axis_config_item.name].add(self.__parse_value(row[y_axis_config_item.index], y_axis_config.datatype, y_axis_config.format))
-                        
+
             for y_values_set in y_values:
                 self.__y_values.append(y_values[y_values_set])
                     

@@ -193,9 +193,6 @@ class Graph(object):
             point = Point(x, y)
             points.append(point)
 
-            # loop_counter += 1
-            # if loop_counter == 20:
-            #     break
         return points
 
     def __get_lowest_and_highest(self, values):
@@ -218,7 +215,7 @@ class Graph(object):
 
     #this logic needs improving
     def __round_int_down(self, value, raw_range):
-        print(value, raw_range)
+        # print(value, raw_range)
         # value_digit_count = len(str(value))
         # raw_range_digit_count = len(str(value))
         # interval = 0
