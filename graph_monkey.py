@@ -54,59 +54,29 @@ def graph_four(graph):
     graph.x_axis_title = 'Dates'
     graph.y_axis_title = 'Count of Something'
 
-# def graph_five(graph):
-    
-#     graph.title = 'BAD_HTTP_STATUS by day'
-#     #'Tuesday_14_April','Wednesday_15_April','Thursday_16_April','Friday_17_April','Saturday_18_April','Sunday_19_April','Monday_20_April','Tuesday_21_April', 'Wednesday_22_April',
-#     days = ['Thursday_23_April','Friday_24_April','Saturday_25_April','Sunday_26_April','Monday_27_April','Tuesday_28_April','Wednesday_29_April']
-#     for day in days:
-#         reader = CSVFileReader()
-#         reader.read_file('data/' + day + '.csv')
-#         x_values = reader.get_x_values()
-#         y_values = reader.get_y_values()
-#         graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values, day))
-#         x_values = None
-#         y_values = None
 
-#     graph.x_axis_title = 'Time'
-#     graph.y_axis_title = 'Count of Errors'
-
-def graph_five(graph):
+def graph_seven(graph, file_name):
     
     config = YAMLConfigReader()
-    config.read_file('data/bad_http_status.yaml')
+    config.read_file(file_name)
 
-    graph.title = "BAD HTTP STATUS"
+    graph.title = config.title
     for file_name in config.file_names:
         reader = CSVFileReader()
         reader.read_file(file_name, config.x_axis_config, config.y_axis_config)
         x_values = reader.get_x_values()
         for y_values in reader.get_y_values():
-            graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values, y_values.name))
+            y_values_name = ""
+            if len(config.file_names) == 1:
+                y_values_name = y_values.name
+            else:
+                y_values_name = config.file_names[file_name]
+            graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values, y_values_name))
         x_values = None
         y_values = None
 
-    graph.x_axis_title = 'Date'
-    graph.y_axis_title = 'Count of Errors'
-
-
-def graph_six(graph):
-    
-    config = YAMLConfigReader()
-    config.read_file('data/034_errors.yaml')
-
-    graph.title = "034_STREAM_POS"
-    for file_name in config.file_names:
-        reader = CSVFileReader()
-        reader.read_file(file_name, config.x_axis_config, config.y_axis_config)
-        x_values = reader.get_x_values()
-        for y_values in reader.get_y_values():
-            graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values, y_values.name))
-        x_values = None
-        y_values = None
-
-    graph.x_axis_title = 'Date'
-    graph.y_axis_title = 'Count of Errors'
+    graph.x_axis_title = config.x_axis_config.title
+    graph.y_axis_title = config.y_axis_config.title
 
 if __name__== "__main__":
 
@@ -114,15 +84,15 @@ if __name__== "__main__":
     web_page_creator.add_stylesheet('graph.css')
 
     graph = svg_graph.Graph(600, 1200)
-    #graph = svg_graph.Graph('90%', '90%')
     
     #graph_one(graph)
     #graph_two(graph)
     #graph_three(graph)
     #graph_four(graph)
-    graph_five(graph)
 
-    #graph_six(graph)
+    #graph_seven(graph, 'data/034_errors.yaml')
+    graph_seven(graph, 'data/bad_http_status.yaml')
+    #graph_seven(graph, 'data/bad_http_status_April.yaml')
 
     graph.draw_graph()
 

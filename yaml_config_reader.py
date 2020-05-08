@@ -7,10 +7,11 @@ from time_value import TimeValue
 
 class YAMLConfigReader(object):
     def __init__(self):
-       self.file_names = []
-       self.file_format = ''
-       self.x_axis_config = None
-       self.y_axis_config = None
+        self.title = ""
+        self.file_names = {}
+        self.file_format = ''
+        self.x_axis_config = None
+        self.y_axis_config = None
 
     def __str__(self):
         return str(self.file_names) + ', ' + str(self.file_format) + ', ' + str(self.x_axis_config) + ', ' + str(self.y_axis_config)
@@ -20,12 +21,15 @@ class YAMLConfigReader(object):
         documents = yaml.safe_load_all(file)
         for document in documents:
             if document is not None:
-                for file_name in document['files']['names']:
-                    self.file_names.append(file_name['name'])
-                self.file_format = str(document['files']['format'])
-                self.x_axis_config = AxisConfig(self.__set_type(self.__navigate_path(document,'x','datatype')), self.__navigate_path(document,'x','format'))
+                self.title = document['title']
+                file_names = {}
+                for file_name in document['data']['files']:
+                    file_names[file_name['file']] = file_name['name']
+                self.file_names = file_names
+                self.file_format = str(document['data']['format'])
+                self.x_axis_config = AxisConfig(self.__navigate_path(document,'x','title'), self.__set_type(self.__navigate_path(document,'x','datatype')), self.__navigate_path(document,'x','format'))
                 self.__read_axis_config_item(self.x_axis_config, document['x']['indexes'])
-                self.y_axis_config = AxisConfig(self.__set_type(self.__navigate_path(document,'y','datatype')), self.__navigate_path(document,'y','format'))
+                self.y_axis_config = AxisConfig(self.__navigate_path(document,'y','title'), self.__set_type(self.__navigate_path(document,'y','datatype')), self.__navigate_path(document,'y','format'))
                 self.__read_axis_config_item(self.y_axis_config, document['y']['indexes'])
                 
 

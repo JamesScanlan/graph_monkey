@@ -1,5 +1,6 @@
 class AxisConfig(object):
-    def __init__(self, datatype, data_format = ''):
+    def __init__(self, title, datatype, data_format = ''):
+        self.title = title
         self.datatype = datatype
         self.format = data_format
         self.axis_config_items = []
@@ -16,7 +17,7 @@ class AxisConfig(object):
             if counter < (len(self.axis_config_items) ):
                 output += ', '
 
-        return str(self.__handle_none(self.datatype)) + ', ' +  str(self.__handle_none(self.format) + ' Config Items: ' + output)
+        return str(str(self.title) + ',' + self.__handle_none(self.datatype)) + ', ' +  str(self.__handle_none(self.format) + ' Config Items: ' + output)
 
     def __handle_none(self, value):
         if value == None:

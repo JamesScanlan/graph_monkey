@@ -6,10 +6,12 @@ from date_axis_labels_creator import DateAxisLabelsCreator
 from datetime_axis_labels_creator import DateTimeAxisLabelsCreator
 from time_value_axis_labels_creator import TimeValueAxisLabelsCreator
 from int_axis_labels_creator import IntAxisLabelsCreator
+from float_axis_labels_creator import FloatAxisLabelsCreator
 from time_value import TimeValue
 from axis import Axis
 from data_sets import DataSets
 from colours_palete import ColoursPalete
+from float_parser import FloatParser
 
 class Graph(object):
     def __init__(self, height, width):
@@ -103,7 +105,7 @@ class Graph(object):
         self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
         if self.x_axis.markers != None:
-            for counter in range(0, len(self.x_axis.markers)):#,75
+            for counter in range(0, len(self.x_axis.markers)):
                 start_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.bottom_margin + self.height)
                 end_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.bottom_margin + self.height + 15)
                 self.svg_contents += svg_monkey.write_line(start_point, end_point)
@@ -117,6 +119,8 @@ class Graph(object):
     def __draw_y_axis(self):
         if self.y_axis.data_type is int:
             self.__draw_y_axis_for_int()
+        if self.y_axis.data_type is float:
+            self.__draw_y_axis_for_float()
         if self.y_axis.data_type is datetime.date:
             self.__draw_y_axis_for_date()
         if self.y_axis.data_type is datetime.datetime:
@@ -184,6 +188,21 @@ class Graph(object):
                 self.svg_contents += svg_monkey.write_text(label_point, str(self.y_axis.markers[counter].label),0,'axis_label')
         self.__draw_y_axis_title(150)
 
+    def __draw_y_axis_for_float(self):
+        start_point = Point(self.left_margin, self.bottom_margin + self.height)
+        end_point = Point(self.left_margin, self.bottom_margin)
+        self.svg_contents += svg_monkey.write_line(start_point, end_point)
+
+        if self.y_axis.markers != None:
+            for counter in range(0, len(self.y_axis.markers)):
+                start_point = Point(self.left_margin, (self.bottom_margin + self.height) - ((counter / (len(self.y_axis.markers) - 1)) * self.height))
+                end_point = Point(self.left_margin - 15, (self.bottom_margin + self.height) - ((counter / (len(self.y_axis.markers) - 1)) * self.height))
+                self.svg_contents += svg_monkey.write_line(start_point, end_point)
+
+                label_point = Point(self.left_margin - 75, (self.bottom_margin + self.height) - ((counter / (len(self.y_axis.markers) - 1)) * self.height) + 5)
+                self.svg_contents += svg_monkey.write_text(label_point, str(self.y_axis.markers[counter].label),0,'axis_label')
+        self.__draw_y_axis_title(150)
+
     def __translate_data_to_points(self, data_set):
         points = []
         # loop_counter = 0
@@ -202,45 +221,31 @@ class Graph(object):
         return lowest_value, highest_value
 
     def __get_value_type(self, value):
-        if type(value) is int:
+        t = type(value)
+        if t is int:
             return int
-        elif type(value) is datetime.datetime:
+        elif t is float:
+            return float
+        elif t is datetime.datetime:
             return datetime.datetime
-        elif type(value) is datetime.date:
+        elif t is datetime.date:
             return datetime.date
-        elif type(value) is TimeValue:
+        elif t is TimeValue:
             return TimeValue
         else:
             return None
 
-    #this logic needs improving
     def __round_int_down(self, value, raw_range):
-        # print(value, raw_range)
-        # value_digit_count = len(str(value))
-        # raw_range_digit_count = len(str(value))
-        # interval = 0
-        # if value_digit_count == raw_range_digit_count:
-        #     interval = value_digit_count
-        # else:
-        #     interval = value_digit_count
-
-        # revised_value = value
-        
-        # if (interval == 1 and value == 0) == False:
-        #     exit_loop = False
-            
-        #     while exit_loop == False:
-        #         revised_value -= interval
-        #         if revised_value == 0:
-        #             exit_loop = True
-        #         elif revised_value % interval == 0:
-        #             exit_loop = True
         revised_value = value
         if int(str(revised_value)[len(str(revised_value))-1]) != 0:
             revised_value = int(str(revised_value)[0:len(str(revised_value))-1] + '0')
-
         return revised_value
     
+    def __round_float_down(self, value, raw_range):
+        parsed_value = FloatParser(value)
+        revised_value = float(str(parsed_value.whole_part) + '.' + str(parsed_value.frac_part)[0:len(str(parsed_value.frac_part))-1] + '0')
+        return revised_value
+
     def __round_date_down(self, value, raw_range):
         if raw_range.days > 365:
             #years
@@ -255,6 +260,8 @@ class Graph(object):
     def __round_down(self, value_type, lowest_value, raw_range):
         if value_type is int:
             return self.__round_int_down(lowest_value, raw_range)
+        if value_type is float:
+            return self.__round_float_down(lowest_value, raw_range)
         if value_type is datetime.date or value_type is datetime.datetime or value_type is TimeValue:
             return self.__round_date_down(lowest_value, raw_range)
         return None
@@ -314,6 +321,8 @@ class Graph(object):
 
         if y_data_type is int:
             self.y_axis.markers = IntAxisLabelsCreator(self.y_axis.low, self.y_axis.high).axis_labels
+        elif y_data_type is float:
+            self.y_axis.markers = FloatAxisLabelsCreator(self.y_axis.low, self.y_axis.high).axis_labels
         elif y_data_type is datetime.date:
             self.y_axis.markers = DateAxisLabelsCreator(self.y_axis.low, self.y_axis.high).axis_labels
         elif y_data_type is datetime.datetime:
