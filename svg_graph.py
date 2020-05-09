@@ -34,9 +34,12 @@ class Graph(object):
             point = Point(self.left_margin + (self.width / 2), self.bottom_margin - (self.bottom_margin / 3))
             self.svg_contents += svg_monkey.write_text(point, self.title, 0, 'title')
 
-    def __draw_x_axis_title(self):
+    def __draw_x_axis_title(self, rotated_labels = False):
         if self.x_axis.title != '':
-            point = Point(self.left_margin + (self.width/2), self.bottom_margin + self.height + 75)
+            y_buffer = 60
+            if rotated_labels == True:
+                y_buffer += 95
+            point = Point(self.left_margin + (self.width/2), self.bottom_margin + self.height + y_buffer)
             self.svg_contents += svg_monkey.write_text(point, self.x_axis.title, 0, 'axis_title')
 
     def __draw_y_axis_title(self, offset = 75):
@@ -89,15 +92,25 @@ class Graph(object):
         end_point = Point(self.left_margin + self.width, self.bottom_margin + self.height)
         self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
+        rotated_labels = False
         if self.x_axis.markers != None:
             for counter in range(0, len(self.x_axis.markers)):
                 start_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.bottom_margin + self.height)
                 end_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.bottom_margin + self.height + 15)
                 self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
-                start_point = Point(self.left_margin -5 + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.bottom_margin + self.height + 30)
-                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label),0,'axis_label')
-        self.__draw_x_axis_title()
+                
+                rotation = 0
+                y_position = self.bottom_margin + self.height + 30
+                if str(self.x_axis.markers[counter].label).find(' ') > -1:
+                    if rotated_labels == False:
+                        rotated_labels = True
+                    rotation = 90
+                    y_position = y_position + 45
+                
+                start_point = Point(self.left_margin -5 + ((counter/ (len(self.x_axis.markers)-1)) * self.width), y_position)
+                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label),rotation,'axis_label')
+        self.__draw_x_axis_title(rotated_labels)
 
     def __draw_x_axis_for_time_value(self):
         start_point = Point(self.left_margin, self.bottom_margin + self.height)
@@ -301,7 +314,8 @@ class Graph(object):
         
         x_data_type, x_low, x_high = self.__evaluate_axis_data_by_type(lowest_x_value, highest_x_value)
         y_data_type, y_low, y_high = self.__evaluate_axis_data_by_type(lowest_y_value, highest_y_value)
-
+        # print(x_low, x_high)
+        # print(y_low, y_high)
         self.x_axis = Axis(x_low, x_high, x_data_type)
         self.y_axis = Axis(y_low, y_high, y_data_type)
 
@@ -362,7 +376,7 @@ class Graph(object):
         return contents
 
     def draw_graph(self):
-        self.svg_contents += svg_monkey.write_svg_start(self.left_margin + self.width + self.left_margin, self.bottom_margin + self.height + self.bottom_margin)
+        self.svg_contents += svg_monkey.write_svg_start(self.left_margin + self.width + self.left_margin, self.bottom_margin + self.height + (self.bottom_margin * 2))
 
         self.__evaluate_data(True)    
         self.__draw_graph_title()

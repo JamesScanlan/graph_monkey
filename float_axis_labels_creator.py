@@ -31,13 +31,13 @@ class FloatAxisLabelsCreator(AxisLabelsCreator):
         interval = self.__determine_interval(self.low, value_range)
         interval_scale = len(str(FloatParser(interval).frac_part))
         axis_labels = []
-        
+        format_string = "{:." + str(interval_scale) + "f}"
         exit_loop = False
         value = self.low
         while exit_loop == False:
             axis_labels.append(AxisLabel(value, str(value)))
             value += interval
-            value = float("{:.2f}".format(value))
-            if value > self.high:
+            value = float(format_string.format(value))
+            if value > (self.high + interval):
                 exit_loop = True
         self.axis_labels = axis_labels
