@@ -83,7 +83,7 @@ if __name__== "__main__":
     web_page_creator = WebPageCreator()
     web_page_creator.add_stylesheet('graph.css')
 
-    graph = svg_graph.Graph(600, 1200)
+    graph = svg_graph.Graph(900, 1600)
     
     #graph_one(graph)
     #graph_two(graph)

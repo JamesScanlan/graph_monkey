@@ -1,8 +1,8 @@
 from svg_point import Point
-#viewBox="0 0 100 100"
-def write_svg_start(width, height):
-    return '<svg viewBox="0 0 ' + str(width) + ' ' + str(height) + '">'
 
+def write_svg_start(width, height):
+    #return '<svg viewBox="0 0 ' + str(width) + ' ' + str(height) + '">'
+    return '<svg height="' + str(height) + '" width="' + str(width) + '">'
 def write_svg_end():
     return '</svg>'
 
