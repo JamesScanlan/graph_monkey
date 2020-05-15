@@ -5,6 +5,9 @@ from web_page_creator import WebPageCreator
 from csv_file_reader import CSVFileReader
 from yaml_config_reader import YAMLConfigReader
 
+from axis_meta_data import AxisMetaData
+from axis_meta_data_item import AxisMetaDataItem
+
 # file:///home/james/Documents/Code/Python/conviva/graph_output.html
 
 def __convert_str_to_dates(list):
@@ -78,6 +81,33 @@ def graph_seven(graph, file_name):
     graph.x_axis_title = config.x_axis_config.title
     graph.y_axis_title = config.y_axis_config.title
 
+def graph_eight(graph, file_name):
+    config = YAMLConfigReader()
+    config.read_file(file_name)
+
+    axis_meta_data = AxisMetaData()
+
+    graph.title = config.title
+    for file_name in config.file_names:
+        reader = CSVFileReader()
+        reader.read_file(file_name, config.x_axis_config, config.y_axis_config)
+        x_values = reader.get_x_values()
+        for y_values in reader.get_y_values():
+            y_values_name = ""
+            if len(config.file_names) == 1:
+                y_values_name = y_values.name
+            else:
+                y_values_name = config.file_names[file_name]
+            graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values, y_values_name))
+            axis_meta_data.add_axis_meta_data_item(AxisMetaDataItem(y_values_name, config.y_axis_config.get_axis_config_item(y_values_name).axis_type))
+        x_values = None
+        y_values = None
+
+    graph.additional_axis_meta_data = axis_meta_data
+    graph.x_axis_title = config.x_axis_config.title
+    graph.y_axis_title = config.y_axis_config.title
+
+
 if __name__== "__main__":
 
     web_page_creator = WebPageCreator()
@@ -91,8 +121,9 @@ if __name__== "__main__":
     #graph_four(graph)
 
     #graph_seven(graph, 'data/034_errors.yaml')
-    graph_seven(graph, 'data/bad_http_status.yaml')
-    #graph_seven(graph, 'data/bad_http_status_April.yaml')
+    #graph_seven(graph, 'data/bad_http_status.yaml')
+
+    graph_eight(graph, 'data/two_y_axes.yaml')
 
     graph.draw_graph()
 
