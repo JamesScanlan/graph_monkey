@@ -46,7 +46,7 @@ class YAMLConfigReader(object):
 
     def __read_axis_config_item(self, axis_config, data):
         for data_item in data:         
-            axis_config.add_axis_config_item(AxisConfigItem(int(data_item['index']), data_item['name'], self.__set_type(data_item['datatype']), self.__set_axis_type(self.__parse_dictionary_item(data_item,'axis')), self.__parse_dictionary_item(data_item,'format')))
+            axis_config.add_axis_config_item(AxisConfigItem(int(data_item['index']), data_item['name'], self.__set_type(data_item['datatype']), self.__set_axis_type(self.__parse_dictionary_item(data_item,'axis')), self.__parse_dictionary_item(data_item,'input_format'), self.__parse_dictionary_item(data_item,'output_format')))
 
     def __parse_dictionary_item(self, reference_dictionary, key_name):
         if key_name in reference_dictionary:

@@ -7,8 +7,19 @@ text {
     /*fill: darkslategrey;*/
 }
 
-.axis_label {
+.y_axis_label {
     font-size: 0.8em;
+    text-anchor: end;
+}
+
+.y_axis_label_reverse {
+    font-size: 0.8em;
+    text-anchor: start;
+}
+
+.x_axis_label {
+    font-size: 0.8em;
+    text-anchor: middle;
 }
 
 .title {

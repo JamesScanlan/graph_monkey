@@ -25,12 +25,11 @@ class Graph(object):
         self.right_margin = 0
         self.svg_contents = ''
         self.x_axis = None
-        #self.y_axis = None
+        self.x_axis_format = None
         self.y_primary_axis = None
         self.y_secondary_axis = None
         self.data_sets = DataSets()
         self.additional_axis_meta_data = None
-
         self.x_axis_title = ''
         self.y_primary_axis_title = ''
         self.y_secondary_axis_title = ''
@@ -79,9 +78,16 @@ class Graph(object):
                 self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
                 start_point = Point(self.left_margin -5 + (((self.x_axis.markers[counter].value - self.x_axis.low) / (self.x_axis.high - self.x_axis.low)) * self.width), self.top_margin + self.height + 30)
-                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label),0,'axis_label')
+                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label),0,'x_axis_label')
         self.__draw_x_axis_title()
-        
+
+    def __format_axis_label_for_date(self, value, format_value):
+        if format_value is not None:
+            return value.strftime(format_value)
+        else:
+            return str(value)
+
+
     def __draw_x_axis_for_date(self):
         start_point = Point(self.left_margin, self.top_margin + self.height)
         end_point = Point(self.left_margin + self.width, self.top_margin + self.height)
@@ -94,7 +100,7 @@ class Graph(object):
                 self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
                 start_point = Point(self.left_margin -5 + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.top_margin + self.height + 30)
-                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label),0,'axis_label')
+                self.svg_contents += svg_monkey.write_text(start_point, self.__format_axis_label_for_date(self.x_axis.markers[counter].value, self.x_axis_format),0,'x_axis_label')
         self.__draw_x_axis_title()
 
     def __draw_x_axis_for_datetime(self):
@@ -118,7 +124,7 @@ class Graph(object):
                     y_position = y_position + 45
                 
                 start_point = Point(self.left_margin -5 + ((counter/ (len(self.x_axis.markers)-1)) * self.width), y_position)
-                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label),rotation,'axis_label')
+                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label),rotation,'x_axis_label')
         self.__draw_x_axis_title(rotated_labels)
 
     def __draw_x_axis_for_time_value(self):
@@ -133,7 +139,7 @@ class Graph(object):
                 self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
                 start_point = Point(self.left_margin -5 + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.top_margin + self.height + 30)
-                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label),0,'axis_label')
+                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label),0,'x_axis_label')
         self.__draw_x_axis_title()
 
     def __draw_x_axis_for_float(self):
@@ -148,21 +154,22 @@ class Graph(object):
                 self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
                 start_point = Point(self.left_margin -5 + (((self.x_axis.markers[counter].value - self.x_axis.low) / (self.x_axis.high - self.x_axis.low)) * self.width), self.top_margin + self.height + 30)
-                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label),0,'axis_label')
+                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label),0,'x_axis_label')
         self.__draw_x_axis_title()
 
 
     def __draw_y_axis(self, axis, axis_position, reverse = False):
-        if axis.data_type is int:
-            self.__draw_y_axis_for_int(axis, axis_position, reverse)
-        if axis.data_type is float:
-            self.__draw_y_axis_for_float(axis, axis_position, reverse)
-        if axis.data_type is datetime.date:
-            self.__draw_y_axis_for_date(axis, axis_position, reverse)
-        if axis.data_type is datetime.datetime:
-            self.__draw_y_axis_for_datetime(axis, axis_position, reverse)
-        if axis.data_type is TimeValue:
-            self.__draw_y_axis_for_time_value(axis, axis_position, reverse)
+        if axis is not None:
+            if axis.data_type is int:
+                self.__draw_y_axis_for_int(axis, axis_position, reverse)
+            if axis.data_type is float:
+                self.__draw_y_axis_for_float(axis, axis_position, reverse)
+            if axis.data_type is datetime.date:
+                self.__draw_y_axis_for_date(axis, axis_position, reverse)
+            if axis.data_type is datetime.datetime:
+                self.__draw_y_axis_for_datetime(axis, axis_position, reverse)
+            if axis.data_type is TimeValue:
+                self.__draw_y_axis_for_time_value(axis, axis_position, reverse)
     
     def __handle_reverse(self, reverse_axis, position, adjustment):
         if reverse_axis == True:
@@ -175,14 +182,19 @@ class Graph(object):
         end_point = Point(axis_position, self.top_margin)
         self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
+        #REFACTOR AHOY!!
+        css_label = 'y_axis_label'
+        if reverse == True:
+            css_label = css_label + '_reverse'
+
         if axis.markers != None:
             for counter in range(0, len(axis.markers)):
                 start_point = Point(axis_position, (self.top_margin + self.height) - (((axis.markers[counter].value - axis.low) / (axis.high - axis.low)) * self.height))
                 end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - (((axis.markers[counter].value - axis.low) / (axis.high - axis.low)) * self.height))
                 self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
-                label_point = Point(self.__handle_reverse(reverse, axis_position, 35), (self.top_margin + self.height) - (((axis.markers[counter].value - axis.low) / (axis.high - axis.low)) * self.height) + 5)
-                self.svg_contents += svg_monkey.write_text(label_point, str((axis.markers[counter].label)),0,'axis_label')
+                label_point = Point(self.__handle_reverse(reverse, axis_position, 20), (self.top_margin + self.height) - (((axis.markers[counter].value - axis.low) / (axis.high - axis.low)) * self.height) + 5)
+                self.svg_contents += svg_monkey.write_text(label_point, str((axis.markers[counter].label)), 0, css_label)
         self.__draw_y_axis_title(axis)
 
     def __draw_y_axis_for_date(self, axis, axis_position, reverse):
@@ -196,8 +208,8 @@ class Graph(object):
                 end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
                 self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
-                label_point = Point(self.__handle_reverse(reverse, axis_position, 75), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height) + 5)
-                self.svg_contents += svg_monkey.write_text(label_point, str(axis.markers[counter].label),0,'axis_label')
+                label_point = Point(self.__handle_reverse(reverse, axis_position, 65), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height) + 5)
+                self.svg_contents += svg_monkey.write_text(label_point, str(axis.markers[counter].label),0,'y_axis_label')
         self.__draw_y_axis_title(axis, 150)
 
     def __draw_y_axis_for_datetime(self, axis, axis_position, reverse):
@@ -211,8 +223,8 @@ class Graph(object):
                 end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
                 self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
-                label_point = Point(self.__handle_reverse(reverse, axis_position, 75), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height) + 5)
-                self.svg_contents += svg_monkey.write_text(label_point, str(axis.markers[counter].label),0,'axis_label')
+                label_point = Point(self.__handle_reverse(reverse, axis_position, 65), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height) + 5)
+                self.svg_contents += svg_monkey.write_text(label_point, str(axis.markers[counter].label),0,'y_axis_label')
         self.__draw_y_axis_title(axis, 150)
 
     def __draw_y_axis_for_time_value(self, axis, axis_position, reverse):
@@ -226,8 +238,8 @@ class Graph(object):
                 end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
                 self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
-                label_point = Point(self.__handle_reverse(reverse, axis_position, 75), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height) + 5)
-                self.svg_contents += svg_monkey.write_text(label_point, str(axis.markers[counter].label),0,'axis_label')
+                label_point = Point(self.__handle_reverse(reverse, axis_position, 65), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height) + 5)
+                self.svg_contents += svg_monkey.write_text(label_point, str(axis.markers[counter].label),0,'y_axis_label')
         self.__draw_y_axis_title(axis, 150)
 
     def __draw_y_axis_for_float(self, axis, axis_position, reverse):
@@ -235,22 +247,30 @@ class Graph(object):
         end_point = Point(axis_position, self.top_margin)
         self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
+        #refactor AHOY!
+        css_label = 'y_axis_label'
+        if reverse == True:
+            css_label = css_label + '_reverse'
+
         if axis.markers != None:
             for counter in range(0, len(axis.markers)):
                 start_point = Point(axis_position, (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
                 end_point = Point(axis_position - 15, (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
                 self.svg_contents += svg_monkey.write_line(start_point, end_point)
 
-                label_point = Point(axis_position - 75, (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height) + 5)
-                self.svg_contents += svg_monkey.write_text(label_point, str(axis.markers[counter].label),0,'axis_label')
+                label_point = Point(axis_position - 25, (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height) + 5)
+                self.svg_contents += svg_monkey.write_text(label_point, str(axis.markers[counter].label),0, css_label)
         self.__draw_y_axis_title(axis, 150)
 
     def __translate_data_to_points(self, data_set):
         y_axis = None
-        if self.additional_axis_meta_data.get_axis_meta_data_item(data_set.name).axis_type == AxisType.PRIMARY:
+        if self.additional_axis_meta_data is None:
             y_axis = self.y_primary_axis
         else:
-            y_axis = self.y_secondary_axis
+            if self.additional_axis_meta_data.get_axis_meta_data_item(data_set.name).axis_type == AxisType.PRIMARY:
+                y_axis = self.y_primary_axis
+            else:
+                y_axis = self.y_secondary_axis
 
         points = []
         for data_item in data_set:
@@ -341,60 +361,68 @@ class Graph(object):
             axis.low = axis.markers[0].value
             axis.high = axis.markers[len(axis.markers)-1].value
 
-    def __evaluate_data(self, zero_base = False):
+    def __determine_y_axes(self):
+        lowest_primary_y_value = None
+        highest_primary_y_value = None
+        lowest_secondary_y_value = None
+        highest_secondary_y_value = None
+
+        for data_set in self.data_sets:
+
+            lowest_y_value = data_set.get_lowest_value()
+            highest_y_value = data_set.get_highest_value()
+
+            if self.additional_axis_meta_data.get_axis_meta_data_item(data_set.name).axis_type == AxisType.PRIMARY:
+
+                if lowest_primary_y_value is None:
+                    lowest_primary_y_value = lowest_y_value
+                else:
+                    if lowest_y_value < lowest_primary_y_value:
+                        lowest_primary_y_value = lowest_y_value
+
+                if highest_primary_y_value is None:
+                    highest_primary_y_value = highest_y_value
+                else:
+                    if highest_y_value > highest_primary_y_value:
+                        highest_primary_y_value = highest_y_value
+
+            elif self.additional_axis_meta_data.get_axis_meta_data_item(data_set.name).axis_type == AxisType.SECONDARY:
+
+                if lowest_secondary_y_value is None:
+                    lowest_secondary_y_value = lowest_y_value
+                else:
+                    if lowest_y_value < lowest_secondary_y_value:
+                        lowest_secondary_y_value = lowest_y_value
+
+                if highest_secondary_y_value is None:
+                    highest_secondary_y_value = highest_y_value
+                else:
+                    if highest_y_value > highest_secondary_y_value:
+                        highest_secondary_y_value = highest_y_value
+
+        y_data_type, y_low, y_high = self.__evaluate_axis_data_by_type(lowest_primary_y_value, highest_primary_y_value)
+        self.y_primary_axis = Axis(y_low, y_high, y_data_type)
+
+        y_data_type, y_low, y_high = self.__evaluate_axis_data_by_type(lowest_secondary_y_value, highest_secondary_y_value)
+        self.y_secondary_axis = Axis(y_low, y_high, y_data_type)
+
+    def __determine_y_axis(self):
+        lowest_y_value, highest_y_value = self.data_sets.get_lowest_and_highest_value()
+        y_data_type, y_low, y_high = self.__evaluate_axis_data_by_type(lowest_y_value, highest_y_value)
+        self.y_primary_axis = Axis(y_low, y_high, y_data_type)
+
+    def __determine_x_axis(self):
         lowest_x_value, highest_x_value = self.data_sets.get_lowest_and_highest_key()
         x_data_type, x_low, x_high = self.__evaluate_axis_data_by_type(lowest_x_value, highest_x_value)
         self.x_axis = Axis(x_low, x_high, x_data_type)
 
+    def __evaluate_data(self, zero_base = False):
+        self.__determine_x_axis()
+
         if self.additional_axis_meta_data is None:
-            lowest_y_value, highest_y_value = self.data_sets.get_lowest_and_highest_value()
-            y_data_type, y_low, y_high = self.__evaluate_axis_data_by_type(lowest_y_value, highest_y_value)
-            self.y_primary_axis = Axis(y_low, y_high, y_data_type)
+            self.__determine_y_axis()
         else:
-            #hmmm James.....these feels like a separate method....yes?
-            lowest_primary_y_value = None
-            highest_primary_y_value = None
-            lowest_secondary_y_value = None
-            highest_secondary_y_value = None
-
-            for data_set in self.data_sets:
-
-                lowest_y_value = data_set.get_lowest_value()
-                highest_y_value = data_set.get_highest_value()
-
-                if self.additional_axis_meta_data.get_axis_meta_data_item(data_set.name).axis_type == AxisType.PRIMARY:
-
-                    if lowest_primary_y_value is None:
-                        lowest_primary_y_value = lowest_y_value
-                    else:
-                        if lowest_y_value < lowest_primary_y_value:
-                            lowest_primary_y_value = lowest_y_value
-
-                    if highest_primary_y_value is None:
-                        highest_primary_y_value = highest_y_value
-                    else:
-                        if highest_y_value > highest_primary_y_value:
-                            highest_primary_y_value = highest_y_value
-
-                elif self.additional_axis_meta_data.get_axis_meta_data_item(data_set.name).axis_type == AxisType.SECONDARY:
-
-                    if lowest_secondary_y_value is None:
-                        lowest_secondary_y_value = lowest_y_value
-                    else:
-                        if lowest_y_value < lowest_secondary_y_value:
-                            lowest_secondary_y_value = lowest_y_value
-
-                    if highest_secondary_y_value is None:
-                        highest_secondary_y_value = highest_y_value
-                    else:
-                        if highest_y_value > highest_secondary_y_value:
-                            highest_secondary_y_value = highest_y_value
-
-            y_data_type, y_low, y_high = self.__evaluate_axis_data_by_type(lowest_primary_y_value, highest_primary_y_value)
-            self.y_primary_axis = Axis(y_low, y_high, y_data_type)
-
-            y_data_type, y_low, y_high = self.__evaluate_axis_data_by_type(lowest_secondary_y_value, highest_secondary_y_value)
-            self.y_secondary_axis = Axis(y_low, y_high, y_data_type)
+            self.__determine_y_axes()
 
         if zero_base == True:
             self.__zero_base_for_int()
@@ -442,7 +470,8 @@ class Graph(object):
         colours_palete = ColoursPalete()
         spacer = 20
         left = self.left_margin + self.width + 50
-
+        if self.additional_axis_meta_data is not None:
+            left += 50
         contents += svg_monkey.write_text(Point(left, self.top_margin), 'Legend', 0, 'legend_item_title')
 
         for data_set in self.data_sets:
@@ -462,9 +491,8 @@ class Graph(object):
 
     def draw_graph(self):
         self.svg_contents += svg_monkey.write_svg_start(self.width,self.height)
-        
         self.__set_graph_dimensions()
-       
+
         self.__evaluate_data(True)    
         self.__draw_graph_title()
         self.__set_axes_titles()

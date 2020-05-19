@@ -24,6 +24,25 @@ class IntAxisLabelsCreator(AxisLabelsCreator):
         interval = self.__determine_interval(self.low, value_range)
         axis_labels = []
         for counter in range(self.low, self.high + interval, interval):
-            axis_labels.append(AxisLabel(counter, str(counter)))
+            axis_labels.append(AxisLabel(counter, self.__formatLabel(counter)))
         
         self.axis_labels = axis_labels
+
+    def __formatLabel(self, value):
+        string_value = str(value)
+        formatted_output = ''
+        if len(string_value) > 3:
+            for counter in range(len(string_value), 0, -3):
+                formatted_output = ',' + string_value[counter - 3 : counter] + formatted_output
+                if (counter - 3) <= 3:
+                    formatted_output = string_value[0:counter - 3] + formatted_output
+                    break
+        else:
+            formatted_output = string_value
+        return formatted_output
+
+if __name__ == "__main__":
+    axis_labels = IntAxisLabelsCreator(0,100000).axis_labels
+    for axis_label in axis_labels:
+        print(str(axis_label))
+

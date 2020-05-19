@@ -78,6 +78,7 @@ def graph_seven(graph, file_name):
         x_values = None
         y_values = None
 
+    graph.x_axis_format = config.x_axis_config.axis_config_items[0].output_format
     graph.x_axis_title = config.x_axis_config.title
     graph.y_axis_title = config.y_axis_config.title
 
@@ -104,6 +105,7 @@ def graph_eight(graph, file_name):
         y_values = None
 
     graph.additional_axis_meta_data = axis_meta_data
+    graph.x_axis_format = config.x_axis_config.axis_config_items[0].output_format
     graph.x_axis_title = config.x_axis_config.title
     graph.y_axis_title = config.y_axis_config.title
 
@@ -122,8 +124,8 @@ if __name__== "__main__":
 
     #graph_seven(graph, 'data/034_errors.yaml')
     #graph_seven(graph, 'data/bad_http_status.yaml')
-
-    graph_eight(graph, 'data/two_y_axes.yaml')
+    graph_seven(graph, 'data/dotcom.yaml')
+    #graph_eight(graph, 'data/two_y_axes.yaml')
 
     graph.draw_graph()
 
