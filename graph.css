@@ -27,11 +27,20 @@ text {
     font-size: 1.25em;
 }
 
-.legend_item {
+text.legend_item {
     text-anchor: start;
     font-weight: normal;
     font-size: 0.8em;
     text-anchor: start;
+    cursor: pointer;
+}
+
+text.legend_item_highlighted {
+    text-anchor: start;
+    font-weight: bold;
+    font-size: 0.8em;
+    text-anchor: start;
+    cursor: pointer;
 }
 
 .legend_item.title {
@@ -53,4 +62,23 @@ circle.point {
 
 polyline {
     stroke-width: 1;
+}
+
+
+line.axis {
+    stroke-width: 1.5;
+    stroke: black;
+}
+
+line {
+    stroke-width: 1;
+    stroke: green;
+}
+
+line.highlighted {
+    stroke-width: 3;
+}
+
+polyline.highlighted {
+    stroke-width: 3;
 }

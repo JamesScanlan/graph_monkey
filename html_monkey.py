@@ -10,6 +10,9 @@ def write_head_start():
 def write_head_end():
     return '</head>'
 
+def write_script_reference(file_name):
+    return '<script type="text/javascript" src="' + file_name + '"></script>'
+
 def write_style_sheet_reference(stylesheet_name):
     return '<link rel="stylesheet" type="text/css" href="' + stylesheet_name + '">'
 

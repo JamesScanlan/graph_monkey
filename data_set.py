@@ -1,9 +1,14 @@
 from data_set_iterator import DataSetIterator
+import uuid
 
 class DataSet(object):
     def __init__(self, name):
         self.data_items = []
         self.name = name
+        self.id = self.__generate_id()
+
+    def __generate_id(self):
+        return uuid.uuid4()
 
     def add_data_items(self, data_items):
         self.data_items = data_items

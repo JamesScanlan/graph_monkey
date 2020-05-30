@@ -10,6 +10,9 @@ class WebPageCreator(object):
     def add_contents(self, contents):
         self.__body += contents
 
+    def add_script_reference(self, script_name):
+        self.__head += html_monkey.write_script_reference(script_name)
+
     def add_stylesheet(self, stylesheet_name):
         self.__head += html_monkey.write_style_sheet_reference(stylesheet_name)
 

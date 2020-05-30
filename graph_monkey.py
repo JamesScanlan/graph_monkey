@@ -113,6 +113,7 @@ def graph_eight(graph, file_name):
 if __name__== "__main__":
 
     web_page_creator = WebPageCreator()
+    web_page_creator.add_script_reference('graph.js')
     web_page_creator.add_stylesheet('graph.css')
 
     graph = svg_graph.Graph(900, 1600)
@@ -123,8 +124,8 @@ if __name__== "__main__":
     #graph_four(graph)
 
     #graph_seven(graph, 'data/034_errors.yaml')
-    #graph_seven(graph, 'data/bad_http_status.yaml')
-    graph_seven(graph, 'data/dotcom.yaml')
+    graph_seven(graph, 'data/bad_http_status.yaml')
+    #graph_seven(graph, 'data/dotcom.yaml')
     #graph_eight(graph, 'data/two_y_axes.yaml')
 
     graph.draw_graph()
