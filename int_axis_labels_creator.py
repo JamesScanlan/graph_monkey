@@ -1,11 +1,14 @@
 from axis_label import AxisLabel
 from axis_labels_creator import AxisLabelsCreator
+from axis_markers import AxisMarkers
+from axis_marker import AxisMarker
 
 class IntAxisLabelsCreator(AxisLabelsCreator):
 
     def __init__(self, low, high):
         super().__init__(low, high)
-        self.__set_axis_labels()
+        #self.__set_axis_labels()
+        self.__create_axis_markers()
 
     def __zero_pad(self, instances):
         padding = ''
@@ -18,15 +21,30 @@ class IntAxisLabelsCreator(AxisLabelsCreator):
             return 1
         else:
             return int("1" + self.__zero_pad(len(str(value_range)) -1))
-        
-    def __set_axis_labels(self):
-        value_range = self.high - self.low
-        interval = self.__determine_interval(self.low, value_range)
-        axis_labels = []
+    
+    def __create_axis_markers(self):
+        interval = self.__determine_interval(self.low, self.high - self.low)
+        new_axis_markers = AxisMarkers()
         for counter in range(self.low, self.high + interval, interval):
-            axis_labels.append(AxisLabel(counter, self.__formatLabel(counter)))
+            axis_label = AxisLabel(counter, self.__formatLabel(counter))
+            axis_percentile = ((axis_label.value - self.low) / (self.high - self.low)) #* 100
+            new_axis_markers.add_axis_marker(AxisMarker(axis_label, axis_percentile))
+        self.axis_markers = new_axis_markers
+
+
+    # def __set_axis_labels(self):
+    #     value_range = self.high - self.low
+    #     interval = self.__determine_interval(self.low, value_range)
+    #     axis_labels = []
+    #     for counter in range(self.low, self.high + interval, interval):
+    #         axis_labels.append(AxisLabel(counter, self.__formatLabel(counter)))
         
-        self.axis_labels = axis_labels
+    #     self.axis_labels = axis_labels
+
+    # def __set_axis_label_percentile(self):
+    #     axis_percentages = []
+    #     for axis_label in self.axis_labels:
+    #         axis_percentages.append(((axis_label.value - self.low) / (self.high - self.low)) * 100)
 
     def __formatLabel(self, value):
         string_value = str(value)
@@ -41,6 +59,7 @@ class IntAxisLabelsCreator(AxisLabelsCreator):
             formatted_output = string_value
         return formatted_output
 
+    
 if __name__ == "__main__":
     axis_labels = IntAxisLabelsCreator(0,100000).axis_labels
     for axis_label in axis_labels:

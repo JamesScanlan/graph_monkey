@@ -5,10 +5,6 @@ class AxisLabelsCreator(object):
         self.high = high
         self.low = low
         self.axis_labels_summarising_metric = 1
+        self.axis_markers = None
 
-    def create_display_labels(self):
-        print("mini mongoose")
-        print(len(self.axis_labels))
-        return self.axis_labels
-  
  
