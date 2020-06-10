@@ -7,7 +7,6 @@ class IntAxisLabelsCreator(AxisLabelsCreator):
 
     def __init__(self, low, high):
         super().__init__(low, high)
-        #self.__set_axis_labels()
         self.__create_axis_markers()
 
     def __zero_pad(self, instances):
@@ -27,24 +26,9 @@ class IntAxisLabelsCreator(AxisLabelsCreator):
         new_axis_markers = AxisMarkers()
         for counter in range(self.low, self.high + interval, interval):
             axis_label = AxisLabel(counter, self.__formatLabel(counter))
-            axis_percentile = ((axis_label.value - self.low) / (self.high - self.low)) #* 100
+            axis_percentile = (axis_label.value - self.low) / (self.high - self.low)
             new_axis_markers.add_axis_marker(AxisMarker(axis_label, axis_percentile))
         self.axis_markers = new_axis_markers
-
-
-    # def __set_axis_labels(self):
-    #     value_range = self.high - self.low
-    #     interval = self.__determine_interval(self.low, value_range)
-    #     axis_labels = []
-    #     for counter in range(self.low, self.high + interval, interval):
-    #         axis_labels.append(AxisLabel(counter, self.__formatLabel(counter)))
-        
-    #     self.axis_labels = axis_labels
-
-    # def __set_axis_label_percentile(self):
-    #     axis_percentages = []
-    #     for axis_label in self.axis_labels:
-    #         axis_percentages.append(((axis_label.value - self.low) / (self.high - self.low)) * 100)
 
     def __formatLabel(self, value):
         string_value = str(value)

@@ -118,15 +118,16 @@ if __name__== "__main__":
 
     graph = svg_graph.Graph(900, 1600)
     
-    graph_one(graph)
+    #raph_one(graph)
     #graph_two(graph)
     #graph_three(graph)
     #graph_four(graph)
 
     #graph_seven(graph, 'data/034_errors.yaml')
-    #graph_seven(graph, 'data/bad_http_status.yaml')
+    graph_seven(graph, 'data/bad_http_status.yaml')
     #graph_seven(graph, 'data/dotcom.yaml')
     #graph_seven(graph, 'data/amazon_fire.yaml')
+    #graph_seven(graph, 'data/bad_http_status_one_day.yaml') # datetime
     #graph_eight(graph, 'data/two_y_axes.yaml')
 
     graph.draw_graph()

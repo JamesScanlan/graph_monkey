@@ -1,13 +1,14 @@
 import datetime
 from axis_label import AxisLabel
 from axis_labels_creator import AxisLabelsCreator
+from axis_markers import AxisMarkers
+from axis_marker import AxisMarker
 
 class DateAxisLabelsCreator(AxisLabelsCreator):
 
     def __init__(self, low, high):
         super().__init__(low, high)
-        self.__set_axis_labels()
-        #self.__display_axis_labels()
+        self.__create_axis_markers()
 
     def __deterimine_interval(self, reference_date, date_range):
         interval = "Day"
@@ -98,27 +99,60 @@ class DateAxisLabelsCreator(AxisLabelsCreator):
         else:
             return self.__determine_interval_date_for_year_increment(reference_date)
 
-    def __set_axis_labels(self):
-        date_range = self.high - self.low
-        interval = self.__deterimine_interval(self.low, date_range)
+    # def __set_axis_labels(self):
+    #     date_range = self.high - self.low
+    #     interval = self.__deterimine_interval(self.low, date_range)
 
+    #     current_day = self.low
+
+    #     axis_labels = []
+    #     axis_labels.append(AxisLabel(current_day, current_day.strftime("%d/%m/%Y")))
+        
+    #     exit_loop = False
+    #     while exit_loop == False:
+    #         increment_date = self.__get_next_interval_date(current_day, interval)
+
+    #         axis_labels.append(AxisLabel(increment_date, increment_date.strftime("%d/%m/%Y")))
+            
+    #         if increment_date > self.high or increment_date == self.high:
+    #             exit_loop = True
+    #         else:
+    #             current_day = increment_date
+
+    #     self.axis_labels = axis_labels
+
+    def __calculate_date_percentile(self, date_value):
+        low = self.low.toordinal()
+        high = self.high.toordinal()
+        value = date_value.toordinal()
+        return (value - low) / (high - low)
+
+
+    def __create_axis_markers(self):
+        interval = self.__deterimine_interval(self.low, self.high - self.low)
         current_day = self.low
 
-        axis_labels = []
-        axis_labels.append(AxisLabel(current_day, current_day.strftime("%d/%m/%Y")))
+        new_axis_markers = AxisMarkers()
+
+        axis_label = AxisLabel(current_day, current_day.strftime("%d/%m/%Y"))
+        axis_percentile = self.__calculate_date_percentile(current_day)
+        new_axis_markers.add_axis_marker(AxisMarker(axis_label, axis_percentile))        
         
         exit_loop = False
         while exit_loop == False:
             increment_date = self.__get_next_interval_date(current_day, interval)
 
-            axis_labels.append(AxisLabel(increment_date, increment_date.strftime("%d/%m/%Y")))
+            axis_label = AxisLabel(increment_date, increment_date.strftime("%d/%m/%Y"))
+            axis_percentile = self.__calculate_date_percentile(increment_date)
+            new_axis_markers.add_axis_marker(AxisMarker(axis_label, axis_percentile))
             
             if increment_date > self.high or increment_date == self.high:
                 exit_loop = True
             else:
                 current_day = increment_date
 
-        self.axis_labels = axis_labels
+        self.axis_markers = new_axis_markers
+
 
     def __display_axis_labels(self):
         for axis_label in self.axis_labels:

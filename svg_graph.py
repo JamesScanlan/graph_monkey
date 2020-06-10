@@ -25,7 +25,7 @@ class Graph(object):
         self.right_margin = 0
         self.svg_contents = ''
         self.x_axis = None
-        self.x_axis_format = None
+        self.x_axis_format = None # why only one format
         self.y_primary_axis = None
         self.y_secondary_axis = None
         self.data_sets = DataSets()
@@ -73,13 +73,10 @@ class Graph(object):
 
         if self.x_axis.markers != None:
             for counter in range(0, len(self.x_axis.markers)):
-                #start_point = Point(self.left_margin + (((self.x_axis.markers[counter].value - self.x_axis.low) / (self.x_axis.high - self.x_axis.low)) * self.width), self.top_margin + self.height)
                 start_point = Point(self.left_margin + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height)
                 end_point = Point(self.left_margin + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height + 15)
-                #end_point = Point(self.left_margin + (((self.x_axis.markers[counter].value -self.x_axis.low) / (self.x_axis.high - self.x_axis.low)) * self.width), self.top_margin + self.height + 15)
                 self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
 
-                #start_point = Point(self.left_margin -5 + (((self.x_axis.markers[counter].value - self.x_axis.low) / (self.x_axis.high - self.x_axis.low)) * self.width), self.top_margin + self.height + 30)
                 start_point = Point(self.left_margin -5 + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height + 30)
                 self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].marker.label),0,'x_axis_label')
         self.__draw_x_axis_title()
@@ -98,12 +95,12 @@ class Graph(object):
 
         if self.x_axis.markers != None:
             for counter in range(0, len(self.x_axis.markers)):
-                start_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.top_margin + self.height)
-                end_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.top_margin + self.height + 15)
+                start_point = Point(self.left_margin + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height)
+                end_point = Point(self.left_margin + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height + 15)
                 self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
 
-                start_point = Point(self.left_margin -5 + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.top_margin + self.height + 30)
-                self.svg_contents += svg_monkey.write_text(start_point, self.__format_axis_label_for_date(self.x_axis.markers[counter].value, self.x_axis_format),0,'x_axis_label')
+                start_point = Point(self.left_margin -5 + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height + 30)
+                self.svg_contents += svg_monkey.write_text(start_point, self.__format_axis_label_for_date(self.x_axis.markers[counter].marker.value, self.x_axis_format),0,'x_axis_label')
         self.__draw_x_axis_title()
 
     def __draw_x_axis_for_datetime(self):
@@ -114,20 +111,20 @@ class Graph(object):
         rotated_labels = False
         if self.x_axis.markers != None:
             for counter in range(0, len(self.x_axis.markers)):
-                start_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.top_margin + self.height)
-                end_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.top_margin + self.height + 15)
+                start_point = Point(self.left_margin + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height)
+                end_point = Point(self.left_margin + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height + 15)
                 self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
                 
                 rotation = 0
                 y_position = self.top_margin + self.height + 30
-                if str(self.x_axis.markers[counter].label).find(' ') > -1:
+                if str(self.x_axis.markers[counter].marker.label).find(' ') > -1:
                     if rotated_labels == False:
                         rotated_labels = True
                     rotation = 90
                     y_position = y_position + 45
                 
-                start_point = Point(self.left_margin -5 + ((counter/ (len(self.x_axis.markers)-1)) * self.width), y_position)
-                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label),rotation,'x_axis_label')
+                start_point = Point(self.left_margin -5 + (self.x_axis.markers[counter].percentile * self.width), y_position)
+                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].marker.label),rotation,'x_axis_label')
         self.__draw_x_axis_title(rotated_labels)
 
     def __draw_x_axis_for_time_value(self):
@@ -137,12 +134,15 @@ class Graph(object):
 
         if self.x_axis.markers != None:
             for counter in range(0, len(self.x_axis.markers)):
-                start_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.top_margin + self.height)
-                end_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.top_margin + self.height + 15)
+                #start_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.top_margin + self.height)
+                #end_point = Point(self.left_margin + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.top_margin + self.height + 15)
+                start_point = Point(self.left_margin + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height)
+                end_point = Point(self.left_margin + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height + 15)
                 self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
 
-                start_point = Point(self.left_margin -5 + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.top_margin + self.height + 30)
-                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label),0,'x_axis_label')
+                #start_point = Point(self.left_margin -5 + ((counter/ (len(self.x_axis.markers)-1)) * self.width), self.top_margin + self.height + 30)
+                start_point = Point(self.left_margin -5 + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height + 30)
+                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].marker.label),0,'x_axis_label')
         self.__draw_x_axis_title()
 
     def __draw_x_axis_for_float(self):
@@ -152,12 +152,15 @@ class Graph(object):
 
         if self.x_axis.markers != None:
             for counter in range(0, len(self.x_axis.markers)):
-                start_point = Point(self.left_margin + (((self.x_axis.markers[counter].value - self.x_axis.low) / (self.x_axis.high - self.x_axis.low)) * self.width), self.top_margin + self.height)
-                end_point = Point(self.left_margin + (((self.x_axis.markers[counter].value -self.x_axis.low) / (self.x_axis.high - self.x_axis.low)) * self.width), self.top_margin + self.height + 15)
+                #start_point = Point(self.left_margin + (((self.x_axis.markers[counter].value - self.x_axis.low) / (self.x_axis.high - self.x_axis.low)) * self.width), self.top_margin + self.height)
+                #end_point = Point(self.left_margin + (((self.x_axis.markers[counter].value -self.x_axis.low) / (self.x_axis.high - self.x_axis.low)) * self.width), self.top_margin + self.height + 15)
+                start_point = Point(self.left_margin + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height)
+                end_point = Point(self.left_margin + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height + 15)
                 self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
 
-                start_point = Point(self.left_margin -5 + (((self.x_axis.markers[counter].value - self.x_axis.low) / (self.x_axis.high - self.x_axis.low)) * self.width), self.top_margin + self.height + 30)
-                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].label),0,'x_axis_label')
+                #start_point = Point(self.left_margin -5 + (((self.x_axis.markers[counter].value - self.x_axis.low) / (self.x_axis.high - self.x_axis.low)) * self.width), self.top_margin + self.height + 30)
+                start_point = Point(self.left_margin -5 + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height + 30)
+                self.svg_contents += svg_monkey.write_text(start_point, str(self.x_axis.markers[counter].marker.label),0,'x_axis_label')
         self.__draw_x_axis_title()
 
 
@@ -192,14 +195,11 @@ class Graph(object):
 
         if axis.markers != None:
             for counter in range(0, len(axis.markers)):
-                # start_point = Point(axis_position, (self.top_margin + self.height) - (((axis.markers[counter].value - axis.low) / (axis.high - axis.low)) * self.height))
                 start_point = Point(axis_position, (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height))
-                # end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - (((axis.markers[counter].value - axis.low) / (axis.high - axis.low)) * self.height))
                 end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height))
 
                 self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
 
-                #label_point = Point(self.__handle_reverse(reverse, axis_position, 20), (self.top_margin + self.height) - (((axis.markers[counter].value - axis.low) / (axis.high - axis.low)) * self.height) + 5)
                 label_point = Point(self.__handle_reverse(reverse, axis_position, 20), (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height) + 5)
                 self.svg_contents += svg_monkey.write_text(label_point, str((axis.markers[counter].marker.label)), 0, css_label)
         self.__draw_y_axis_title(axis)
@@ -211,12 +211,12 @@ class Graph(object):
 
         if axis.markers != None:
             for counter in range(0, len(axis.markers)):
-                start_point = Point(axis_position, (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
-                end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
+                start_point = Point(axis_position, (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height))
+                end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height))
                 self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
 
-                label_point = Point(self.__handle_reverse(reverse, axis_position, 65), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height) + 5)
-                self.svg_contents += svg_monkey.write_text(label_point, str(axis.markers[counter].label),0,'y_axis_label')
+                label_point = Point(self.__handle_reverse(reverse, axis_position, 65), (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height) + 5)
+                self.svg_contents += svg_monkey.write_text(label_point, self.__format_axis_label_for_date(axis.markers[counter].marker.value, self.x_axis_format),0,'y_axis_label')
         self.__draw_y_axis_title(axis, 150)
 
     def __draw_y_axis_for_datetime(self, axis, axis_position, reverse):
@@ -226,12 +226,15 @@ class Graph(object):
 
         if axis.markers != None:
             for counter in range(0, len(axis.markers)):
-                start_point = Point(axis_position, (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
-                end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
+                #start_point = Point(axis_position, (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
+                #end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
+                start_point = Point(axis_position, (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height))
+                end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height))
                 self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
 
-                label_point = Point(self.__handle_reverse(reverse, axis_position, 65), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height) + 5)
-                self.svg_contents += svg_monkey.write_text(label_point, str(axis.markers[counter].label),0,'y_axis_label')
+                #label_point = Point(self.__handle_reverse(reverse, axis_position, 65), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height) + 5)
+                label_point = Point(self.__handle_reverse(reverse, axis_position, 65), (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height) + 5)
+                self.svg_contents += svg_monkey.write_text(label_point, str(axis.markers[counter].marker.label),0,'y_axis_label')
         self.__draw_y_axis_title(axis, 150)
 
     def __draw_y_axis_for_time_value(self, axis, axis_position, reverse):
@@ -241,12 +244,15 @@ class Graph(object):
 
         if axis.markers != None:
             for counter in range(0, len(axis.markers)):
-                start_point = Point(axis_position, (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
-                end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
+                #start_point = Point(axis_position, (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
+                #end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
+                start_point = Point(axis_position, (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height))
+                end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height))
                 self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
 
-                label_point = Point(self.__handle_reverse(reverse, axis_position, 65), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height) + 5)
-                self.svg_contents += svg_monkey.write_text(label_point, str(axis.markers[counter].label),0,'y_axis_label')
+                #label_point = Point(self.__handle_reverse(reverse, axis_position, 65), (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height) + 5)
+                label_point = Point(self.__handle_reverse(reverse, axis_position, 20), (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height) + 5)
+                self.svg_contents += svg_monkey.write_text(label_point, str(axis.markers[counter].marker.label),0,'y_axis_label')
         self.__draw_y_axis_title(axis, 150)
 
     def __draw_y_axis_for_float(self, axis, axis_position, reverse):
@@ -261,12 +267,16 @@ class Graph(object):
 
         if axis.markers != None:
             for counter in range(0, len(axis.markers)):
-                start_point = Point(axis_position, (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
-                end_point = Point(axis_position - 15, (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
+                #start_point = Point(axis_position, (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
+                #end_point = Point(axis_position - 15, (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height))
+                start_point = Point(axis_position, (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height))
+                end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height))
+                
                 self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
 
-                label_point = Point(axis_position - 25, (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height) + 5)
-                self.svg_contents += svg_monkey.write_text(label_point, str(axis.markers[counter].label),0, css_label)
+                #label_point = Point(axis_position - 25, (self.top_margin + self.height) - ((counter / (len(axis.markers) - 1)) * self.height) + 5)
+                label_point = Point(self.__handle_reverse(reverse, axis_position, 20), (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height) + 5)
+                self.svg_contents += svg_monkey.write_text(label_point, str(axis.markers[counter].marker.label),0, css_label)
         self.__draw_y_axis_title(axis, 150)
 
     def __translate_data_to_points(self, data_set):
@@ -446,16 +456,17 @@ class Graph(object):
 
     def __set_axis_markers(self, axis):
         if axis.data_type is int:
-            #axis.markers = IntAxisLabelsCreator(axis.low, axis.high).axis_labels
-            axis.markers = IntAxisLabelsCreator(axis.low, axis.high).axis_markers
+            creator = IntAxisLabelsCreator
         elif axis.data_type is float:
-            axis.markers = FloatAxisLabelsCreator(axis.low, axis.high).axis_labels
+            creator = FloatAxisLabelsCreator
         elif axis.data_type is datetime.date:
-            axis.markers = DateAxisLabelsCreator(axis.low, axis.high).axis_labels
+            creator = DateAxisLabelsCreator
         elif axis.data_type is datetime.datetime:
-            axis.markers = DateTimeAxisLabelsCreator(axis.low, axis.high).axis_labels
+            creator = DateTimeAxisLabelsCreator
         elif axis.data_type is TimeValue:
-            axis.markers = TimeValueAxisLabelsCreator(axis.low, axis.high).axis_labels
+            creator = TimeValueAxisLabelsCreator
+            
+        axis.markers = creator(axis.low, axis.high).axis_markers
 
     def __write_point_markers(self, points, display_markers=True, display_labels=True, color="", label = ""):
         for point in points:
