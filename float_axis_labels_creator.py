@@ -23,24 +23,11 @@ class FloatAxisLabelsCreator(AxisLabelsCreator):
         zero_padding = ''
         for padding_counter in range(0, len(str(parsed_value.frac_part)) -1):
             zero_padding += '0'
-        return float('0.' + zero_padding + '1')
+        indicative_interval = float('0.' + zero_padding + '1')
+        if value_range / indicative_interval > 15:
+            indicative_interval = indicative_interval * 10
+        return indicative_interval 
         
-    # def __set_axis_labels(self):
-    #     value_range = self.high - self.low
-    #     interval = self.__determine_interval(self.low, value_range)
-    #     interval_scale = len(str(FloatParser(interval).frac_part))
-    #     axis_labels = []
-    #     format_string = "{:." + str(interval_scale) + "f}"
-    #     exit_loop = False
-    #     value = self.low
-    #     while exit_loop == False:
-    #         axis_labels.append(AxisLabel(value, str(value)))
-    #         value += interval
-    #         value = float(format_string.format(value))
-    #         if value > (self.high + interval):
-    #             exit_loop = True
-    #     self.axis_labels = axis_labels
-
     def __create_axis_markers(self):
         interval = self.__determine_interval(self.low, self.high - self.low)
         interval_scale = len(str(FloatParser(interval).frac_part))

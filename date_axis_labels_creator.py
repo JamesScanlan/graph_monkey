@@ -13,7 +13,10 @@ class DateAxisLabelsCreator(AxisLabelsCreator):
     def __deterimine_interval(self, reference_date, date_range):
         interval = "Day"
         if date_range.days > self.__get_days_in_year(reference_date.year):
-            interval = "Year"
+            if date_range.days > (365 * 2):
+                interval = "Year"
+            else:
+                interval = "Month"
         elif date_range.days > self.__get_days_in_month(reference_date):
             interval = "Month"
         elif date_range.days > 15:
@@ -99,43 +102,32 @@ class DateAxisLabelsCreator(AxisLabelsCreator):
         else:
             return self.__determine_interval_date_for_year_increment(reference_date)
 
-    # def __set_axis_labels(self):
-    #     date_range = self.high - self.low
-    #     interval = self.__deterimine_interval(self.low, date_range)
-
-    #     current_day = self.low
-
-    #     axis_labels = []
-    #     axis_labels.append(AxisLabel(current_day, current_day.strftime("%d/%m/%Y")))
-        
-    #     exit_loop = False
-    #     while exit_loop == False:
-    #         increment_date = self.__get_next_interval_date(current_day, interval)
-
-    #         axis_labels.append(AxisLabel(increment_date, increment_date.strftime("%d/%m/%Y")))
-            
-    #         if increment_date > self.high or increment_date == self.high:
-    #             exit_loop = True
-    #         else:
-    #             current_day = increment_date
-
-    #     self.axis_labels = axis_labels
-
-    def __calculate_date_percentile(self, date_value):
+    def __calculate_date_percentile(self, date_value, calculated_maximum):
         low = self.low.toordinal()
-        high = self.high.toordinal()
+        high = calculated_maximum.toordinal()
         value = date_value.toordinal()
         return (value - low) / (high - low)
 
+    def __get_calculated_high_based_on_next_interval_date(self, start_date, interval):
+        current_day = start_date
+        exit_loop = False
+        while exit_loop == False:
+            increment_date = self.__get_next_interval_date(current_day, interval)
+            current_day = increment_date
+            if increment_date > self.high or increment_date == self.high:
+                exit_loop = True
+                
+        return current_day
+        
 
     def __create_axis_markers(self):
         interval = self.__deterimine_interval(self.low, self.high - self.low)
         current_day = self.low
-
+        maximum_day = self.__get_calculated_high_based_on_next_interval_date(current_day, interval)
         new_axis_markers = AxisMarkers()
 
         axis_label = AxisLabel(current_day, current_day.strftime("%d/%m/%Y"))
-        axis_percentile = self.__calculate_date_percentile(current_day)
+        axis_percentile = self.__calculate_date_percentile(current_day, maximum_day)
         new_axis_markers.add_axis_marker(AxisMarker(axis_label, axis_percentile))        
         
         exit_loop = False
@@ -143,7 +135,10 @@ class DateAxisLabelsCreator(AxisLabelsCreator):
             increment_date = self.__get_next_interval_date(current_day, interval)
 
             axis_label = AxisLabel(increment_date, increment_date.strftime("%d/%m/%Y"))
-            axis_percentile = self.__calculate_date_percentile(increment_date)
+            if str(axis_label) == '01/09/2020':
+                hello='bongo'
+            axis_percentile = self.__calculate_date_percentile(increment_date, maximum_day)
+
             new_axis_markers.add_axis_marker(AxisMarker(axis_label, axis_percentile))
             
             if increment_date > self.high or increment_date == self.high:
@@ -151,13 +146,15 @@ class DateAxisLabelsCreator(AxisLabelsCreator):
             else:
                 current_day = increment_date
 
+        #self.__display_axis_labels()
+
         self.axis_markers = new_axis_markers
 
 
     def __display_axis_labels(self):
-        for axis_label in self.axis_labels:
-            if axis_label != None:
-                print(axis_label.value, axis_label.label)
+        for axis_marker in self.axis_markers: #ah yes it currently isn't iteratable
+            if axis_marker != None:
+                print(axis_marker)
             else:
                 print("None")
 

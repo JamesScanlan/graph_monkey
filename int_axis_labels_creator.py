@@ -19,14 +19,29 @@ class IntAxisLabelsCreator(AxisLabelsCreator):
         if value_range <= 25:
             return 1
         else:
-            return int("1" + self.__zero_pad(len(str(value_range)) -1))
+            potential_interval = int("1" + self.__zero_pad(len(str(value_range)) -1))
+            if int( int(value_range) / potential_interval) < 5:
+                potential_interval = int(potential_interval / 10)
+                if int( int(value_range) / potential_interval) > 20:
+                    potential_interval = potential_interval * 5
+
+            return potential_interval
     
+    def __calculate_max_marker(self, interval):
+        ceiling = 0
+        for counter in range(self.low, self.high, interval):
+            ceiling += interval
+        return ceiling
+
     def __create_axis_markers(self):
         interval = self.__determine_interval(self.low, self.high - self.low)
         new_axis_markers = AxisMarkers()
-        for counter in range(self.low, self.high + interval, interval):
+
+        max_marker = self.__calculate_max_marker(interval)
+
+        for counter in range(self.low, max_marker + interval, interval): #self.high + interval
             axis_label = AxisLabel(counter, self.__formatLabel(counter))
-            axis_percentile = (axis_label.value - self.low) / (self.high - self.low)
+            axis_percentile = (axis_label.value - self.low) / (max_marker - self.low) #self.high
             new_axis_markers.add_axis_marker(AxisMarker(axis_label, axis_percentile))
         self.axis_markers = new_axis_markers
 

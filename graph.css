@@ -82,3 +82,37 @@ line.highlighted {
 polyline.highlighted {
     stroke-width: 3;
 }
+
+
+.scrolldiv
+{
+    /* border: 1px solid grey; */
+    border-radius: 2px;
+    height: 700px;
+    overflow-y: scroll;
+    overflow-x: scroll;
+}
+
+.containerdiv
+{
+    width: 100%;
+    height: 800px;
+    /*background: #f4f4f4;*/
+    display:inline-block;
+    /*border:2px; solid red;*/ 
+}
+
+.graphdiv
+{
+    width:auto;
+    padding:10px;
+    float:left;
+    /* border:2px solid blue; */
+}
+
+.legenddiv
+{
+    padding:10px;
+    float:left;
+    /*border:2px solid green;*/
+}

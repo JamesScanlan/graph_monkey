@@ -1,0 +1,33 @@
+.scrolldiv
+{
+    border: 3px solid grey;
+    border-radius: 2px;
+    height: 700px;
+    /*width: 100px;*/
+    overflow-y: scroll;
+    overflow-x: scroll;
+}
+
+.list-row
+{
+    width: 100%;;
+    height: 800px;
+    background: #f4f4f4;
+    display:inline-block;
+    border:2px; solid red;
+}
+
+.list-left
+{
+    width:auto;
+    padding:10px;
+    float:left;
+    border:2px solid blue;   
+}
+
+.list-right
+{
+    padding:10px;
+    float:right;
+    border:2px solid green;
+}

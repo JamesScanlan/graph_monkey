@@ -1,4 +1,6 @@
 import svg_graph
+import graph_layout_wrapper
+
 import datetime
 import data_items_converter
 from web_page_creator import WebPageCreator
@@ -7,6 +9,8 @@ from yaml_config_reader import YAMLConfigReader
 
 from axis_meta_data import AxisMetaData
 from axis_meta_data_item import AxisMetaDataItem
+from graph_data_set import GraphDataSet
+from axis_type_enum import AxisType
 
 # file:///home/james/Documents/Code/Python/conviva/graph_output.html
 
@@ -74,7 +78,9 @@ def graph_seven(graph, file_name):
                 y_values_name = y_values.name
             else:
                 y_values_name = config.file_names[file_name]
-            graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values, y_values_name))
+            
+            graph.data_sets.add_data_set(GraphDataSet(data_items_converter.create_data_set(x_values, y_values, y_values_name), get_axis_type(config, y_values_name)))
+
         x_values = None
         y_values = None
 
@@ -82,6 +88,14 @@ def graph_seven(graph, file_name):
     graph.x_axis_title = config.x_axis_config.title
     graph.y_axis_title = config.y_axis_config.title
 
+def get_axis_type(config, y_values_name):
+    if config.y_axis_config.get_axis_config_item(y_values_name) == None:
+        return AxisType.PRIMARY
+    else:
+        return config.y_axis_config.get_axis_config_item(y_values_name).axis_type
+
+
+#???for two axes??
 def graph_eight(graph, file_name):
     config = YAMLConfigReader()
     config.read_file(file_name)
@@ -99,8 +113,13 @@ def graph_eight(graph, file_name):
                 y_values_name = y_values.name
             else:
                 y_values_name = config.file_names[file_name]
-            graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values, y_values_name))
+            
+            graph.data_sets.add_data_set(GraphDataSet(data_items_converter.create_data_set(x_values, y_values, y_values_name), config.y_axis_config.get_axis_config_item(y_values_name).axis_type))
             axis_meta_data.add_axis_meta_data_item(AxisMetaDataItem(y_values_name, config.y_axis_config.get_axis_config_item(y_values_name).axis_type))
+
+            # graph.data_sets.add_data_set(data_items_converter.create_data_set(x_values, y_values, y_values_name))
+            # axis_meta_data.add_axis_meta_data_item(AxisMetaDataItem(y_values_name, config.y_axis_config.get_axis_config_item(y_values_name).axis_type))
+
         x_values = None
         y_values = None
 
@@ -112,27 +131,36 @@ def graph_eight(graph, file_name):
 
 if __name__== "__main__":
 
-    web_page_creator = WebPageCreator()
-    web_page_creator.add_script_reference('graph.js')
-    web_page_creator.add_stylesheet('graph.css')
-
     graph = svg_graph.Graph(900, 1600)
     
-    #raph_one(graph)
+    #graph_one(graph)
     #graph_two(graph)
     #graph_three(graph)
     #graph_four(graph)
 
     #graph_seven(graph, 'data/034_errors.yaml')
-    graph_seven(graph, 'data/bad_http_status.yaml')
+    #graph_seven(graph, 'data/bad_http_status.yaml')
     #graph_seven(graph, 'data/dotcom.yaml')
     #graph_seven(graph, 'data/amazon_fire.yaml')
     #graph_seven(graph, 'data/bad_http_status_one_day.yaml') # datetime
+    
+    #graph_seven(graph, 'data/dotcom_bulk.yaml')
+    #graph_seven(graph, 'data/dotcom_pivot.yaml')
+    #graph_seven(graph, 'data/dotcom_404_410.yaml')
+    #graph_seven(graph, 'data/android_errors_by_version.yaml')
+    graph_seven(graph, 'data/covid_deaths.yaml')
+
     #graph_eight(graph, 'data/two_y_axes.yaml')
+    #graph_eight(graph, 'data/2020_error_codes_and_rates.yaml')
 
-    graph.draw_graph()
+    graph.draw_graph() #False (hack to stop sorting)
 
-    web_page_creator.add_contents(graph.svg_contents)
+
+    web_page_creator = WebPageCreator()
+    web_page_creator.add_script_reference('graph.js')
+    web_page_creator.add_stylesheet('graph.css')
+    
+    web_page_creator.add_contents(graph_layout_wrapper.wrap_contents_for_layout(graph.svg_contents, graph.svg_legend_title_contents, graph.svg_legend_contents))
     #web_page_creator.add_contents(graph.draw_legend())
 
     with open("graph_output.html", "w") as file:

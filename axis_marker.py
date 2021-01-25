@@ -11,3 +11,6 @@ class AxisMarker(object):
 
     def __lt__(self, value):
         return self.value < value
+
+    def __str__(self):
+        return str(self.marker) + str(' ') + str(self.percentile)
