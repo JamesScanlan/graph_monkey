@@ -159,6 +159,6 @@ def test_palete(amount):
 
 
 if __name__== "__main__":
-    #generate_palete_in_html_table()
-    test_palete(10)
+    generate_palete_in_html_table()
+    #test_palete(10)
     

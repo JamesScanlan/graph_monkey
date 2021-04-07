@@ -52,7 +52,14 @@ class Graph(object):
             point = Point(self.left_margin + (self.width/2), self.top_margin + self.height + y_buffer)
             self.svg_contents += svg_monkey.write_text(point, self.x_axis.title, 0, 'axis_title')
 
+
+    def __determine_y_axis_title_offset(self, axis):
+        max_value_label = '{:,}'.format(axis.high)
+        return 30 + (8 * len(max_value_label))
+
     def __draw_y_axis_title(self, axis, offset = 75):
+        offset = self.__determine_y_axis_title_offset(axis)
+
         if axis.title != '' and axis.title != None:
             point = Point(self.left_margin - offset, self.top_margin + (self.height/2))
             self.svg_contents += svg_monkey.write_text(point, axis.title, 270, 'axis_title')

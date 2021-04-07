@@ -148,7 +148,23 @@ if __name__== "__main__":
     #graph_seven(graph, 'data/dotcom_pivot.yaml')
     #graph_seven(graph, 'data/dotcom_404_410.yaml')
     #graph_seven(graph, 'data/android_errors_by_version.yaml')
-    graph_seven(graph, 'data/covid_deaths.yaml')
+    #graph_seven(graph, 'data/android_drm_session_errors_by_version.yaml')
+    
+    #graph_seven(graph, 'data/covid_deaths.yaml')
+    
+    #graph_seven(graph, 'data/2021_total_views.yaml')
+    #graph_seven(graph, 'data/2020_q4_views.yaml')
+    
+    #graph_seven(graph, 'data/all4_error_percentages.yaml')
+    graph_seven(graph, 'data/all4_blended_error_rate.yaml')
+    
+    #graph_seven(graph, 'data/virgintv_error_percentages.yaml')
+    #graph_seven(graph, 'data/virgintv_error_percentages_by_providers.yaml')
+    #graph_seven(graph, 'data/virgintv_error_counts_by_providers.yaml')
+
+    #graph_seven(graph, 'data/2021_aggregate_total_views.yaml')
+    #graph_seven(graph, 'data/2021_cumulative_views.yaml')
+    #graph_seven(graph, 'data/views_cumulative_year_on_year.yaml')
 
     #graph_eight(graph, 'data/two_y_axes.yaml')
     #graph_eight(graph, 'data/2020_error_codes_and_rates.yaml')
