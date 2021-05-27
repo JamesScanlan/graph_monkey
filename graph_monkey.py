@@ -156,7 +156,7 @@ if __name__== "__main__":
     #graph_seven(graph, 'data/2020_q4_views.yaml')
     
     #graph_seven(graph, 'data/all4_error_percentages.yaml')
-    graph_seven(graph, 'data/all4_blended_error_rate.yaml')
+    #graph_seven(graph, 'data/all4_blended_error_rate.yaml')
     
     #graph_seven(graph, 'data/virgintv_error_percentages.yaml')
     #graph_seven(graph, 'data/virgintv_error_percentages_by_providers.yaml')
@@ -168,6 +168,8 @@ if __name__== "__main__":
 
     #graph_eight(graph, 'data/two_y_axes.yaml')
     #graph_eight(graph, 'data/2020_error_codes_and_rates.yaml')
+
+    graph_seven(graph, 'data/video_start_failures.yaml')
 
     graph.draw_graph() #False (hack to stop sorting)
 

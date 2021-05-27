@@ -6,10 +6,8 @@ from axis_marker import AxisMarker
 
 class DateTimeAxisLabelsCreator(AxisLabelsCreator):
 
-    def __init__(self, low, high):
-        super().__init__(low, high)
-        #self.__set_axis_labels()
-        #self.__display_axis_labels()
+    def __init__(self, low, high, format):
+        super().__init__(low, high, format)
         self.__create_axis_markers()
 
     def __deterimine_interval(self, reference_datetime, datetime_range):
@@ -170,28 +168,6 @@ class DateTimeAxisLabelsCreator(AxisLabelsCreator):
         else:
             return self.__determine_interval_for_year_increment(reference_datetime)
 
-    # def __set_axis_labels(self):
-    #     date_range = self.high - self.low
-    #     interval = self.__deterimine_interval(self.low, date_range)
-
-    #     current_datetime = self.low
-
-    #     axis_labels = []
-    #     axis_labels.append(AxisLabel(current_datetime, current_datetime.strftime("%d/%m/%Y %H:%M")))
-        
-    #     exit_loop = False
-    #     while exit_loop == False:
-    #         increment_datetime = self.__get_next_interval_datetime(current_datetime, interval)
-
-    #         axis_labels.append(AxisLabel(increment_datetime, increment_datetime.strftime("%d/%m/%Y %H:%M")))
-            
-    #         if increment_datetime > self.high or increment_datetime == self.high:
-    #             exit_loop = True
-    #         else:
-    #             current_datetime = increment_datetime
-
-    #     self.axis_labels = axis_labels
-
     def __calculate_datetime_percentile(self, datetime_value):
         low = self.low.timestamp()
         high = self.high.timestamp()
@@ -205,7 +181,7 @@ class DateTimeAxisLabelsCreator(AxisLabelsCreator):
 
         new_axis_markers = AxisMarkers()
 
-        axis_label = AxisLabel(current_datetime, current_datetime.strftime("%d/%m/%Y %H:%M"))
+        axis_label = AxisLabel(current_datetime, current_datetime.strftime(self.format))
         axis_percentile = self.__calculate_datetime_percentile(current_datetime)
         new_axis_markers.add_axis_marker(AxisMarker(axis_label, axis_percentile))
 
@@ -213,7 +189,7 @@ class DateTimeAxisLabelsCreator(AxisLabelsCreator):
         while exit_loop == False:
             increment_datetime = self.__get_next_interval_datetime(current_datetime, interval)
 
-            axis_label = AxisLabel(increment_datetime, increment_datetime.strftime("%d/%m/%Y %H:%M"))
+            axis_label = AxisLabel(increment_datetime, increment_datetime.strftime(self.format))
             axis_percentile = self.__calculate_datetime_percentile(increment_datetime)
             new_axis_markers.add_axis_marker(AxisMarker(axis_label, axis_percentile))
             

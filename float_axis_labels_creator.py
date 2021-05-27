@@ -6,8 +6,8 @@ from axis_marker import AxisMarker
 
 class FloatAxisLabelsCreator(AxisLabelsCreator):
 
-    def __init__(self, low, high):
-        super().__init__(low, high)
+    def __init__(self, low, high, format):
+        super().__init__(low, high, format)
         #self.__set_axis_labels()
         self.__create_axis_markers()
 
