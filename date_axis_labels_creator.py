@@ -123,13 +123,19 @@ class DateAxisLabelsCreator(AxisLabelsCreator):
     def __create_axis_markers(self):
         interval = self.__deterimine_interval(self.low, self.high - self.low)
         current_day = self.low
-        maximum_day = self.__get_calculated_high_based_on_next_interval_date(current_day, interval)
+        maximum_day = self.high
+        #changed to be highest data value...not the a future logical calendar date like 1st of week, month or year
+        #maximum_day = self.__get_calculated_high_based_on_next_interval_date(current_day, interval)
         new_axis_markers = AxisMarkers()
 
-        axis_label = AxisLabel(current_day, current_day.strftime("%d/%m/%Y"))
-        axis_percentile = self.__calculate_date_percentile(current_day, maximum_day)
-        new_axis_markers.add_axis_marker(AxisMarker(axis_label, axis_percentile))        
+        #Stop first one being created
+        #axis_label = AxisLabel(current_day, current_day.strftime("%d/%m/%Y"))
+        #axis_percentile = self.__calculate_date_percentile(current_day, maximum_day)
+        #new_axis_markers.add_axis_marker(AxisMarker(axis_label, axis_percentile))        
         
+
+        print("self.high", self.high)
+
         exit_loop = False
         while exit_loop == False:
             increment_date = self.__get_next_interval_date(current_day, interval)
@@ -141,7 +147,7 @@ class DateAxisLabelsCreator(AxisLabelsCreator):
 
             new_axis_markers.add_axis_marker(AxisMarker(axis_label, axis_percentile))
             
-            if increment_date > self.high or increment_date == self.high:
+            if increment_date >= self.high: # or increment_date == self.high:
                 exit_loop = True
             else:
                 current_day = increment_date

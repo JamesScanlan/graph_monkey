@@ -424,6 +424,7 @@ class Graph(object):
             self.__zero_base_for_int()
 
         #Need to reset x axis markers so they don't start and stop at ends...and revise end to end with data not axis
+        #next work to fix now in drawing axis and data on x axis
         self.__set_axis_markers(self.x_axis)
         self.__revise_high_low(self.x_axis)
 
