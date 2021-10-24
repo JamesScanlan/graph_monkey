@@ -311,7 +311,8 @@ class Graph(object):
             return datetime.date(value.year, 1, 1)
         elif raw_range.days > 31: #clunky
             #months
-            return datetime.date(value.year, value.month, 1)
+            #return datetime.date(value.year, value.month, 1)
+            return datetime.date(value.year, value.month + 1, 1)
         else:
             #days
             return value
@@ -405,9 +406,11 @@ class Graph(object):
 
     def __determine_x_axis(self):
         lowest_x_value, highest_x_value = self.data_sets.get_lowest_and_highest_key()
-        #print(lowest_x_value, highest_x_value)
+        print(lowest_x_value, highest_x_value)
         x_data_type, x_low, x_high = self.__evaluate_axis_data_by_type(lowest_x_value, highest_x_value)
-        self.x_axis = Axis(x_low, x_high, x_data_type, self.x_axis_format)
+        print(x_low, x_high)
+        #self.x_axis = Axis(x_low, x_high, x_data_type, self.x_axis_format)
+        self.x_axis = Axis(lowest_x_value, highest_x_value, x_data_type, self.x_axis_format)
 
     def __evaluate_data(self, zero_base = False, sort_data_sets = True):
         self.__determine_x_axis()
@@ -420,6 +423,7 @@ class Graph(object):
         if zero_base == True:
             self.__zero_base_for_int()
 
+        #Need to reset x axis markers so they don't start and stop at ends...and revise end to end with data not axis
         self.__set_axis_markers(self.x_axis)
         self.__revise_high_low(self.x_axis)
 

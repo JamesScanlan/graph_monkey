@@ -169,7 +169,9 @@ if __name__== "__main__":
     #graph_eight(graph, 'data/two_y_axes.yaml')
     #graph_eight(graph, 'data/2020_error_codes_and_rates.yaml')
 
-    graph_seven(graph, 'data/video_start_failures.yaml')
+    #graph_seven(graph, 'data/video_start_failures.yaml')
+    
+    graph_seven(graph, 'data/conviva_pivot.yaml')
 
     graph.draw_graph() #False (hack to stop sorting)
 
