@@ -75,7 +75,7 @@ class Graph(object):
 
         rotated_labels = False
         if self.x_axis.markers != None:
-            for counter in range(0, len(self.x_axis.markers) ):#-1
+            for counter in range(0, len(self.x_axis.markers) ) :#-1
                 start_point = Point(self.left_margin + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height)
                 end_point = Point(self.left_margin + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height + 15)
                 self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
@@ -406,10 +406,10 @@ class Graph(object):
 
     def __determine_x_axis(self):
         lowest_x_value, highest_x_value = self.data_sets.get_lowest_and_highest_key()
-        print(lowest_x_value, highest_x_value)
         x_data_type, x_low, x_high = self.__evaluate_axis_data_by_type(lowest_x_value, highest_x_value)
-        print(x_low, x_high)
-        #self.x_axis = Axis(x_low, x_high, x_data_type, self.x_axis_format)
+        # x_low = lowest_x_value
+        # x_high = highest_x_value
+        # #self.x_axis = Axis(x_low, x_high, x_data_type, self.x_axis_format)
         self.x_axis = Axis(lowest_x_value, highest_x_value, x_data_type, self.x_axis_format)
 
     def __evaluate_data(self, zero_base = False, sort_data_sets = True):
@@ -426,7 +426,9 @@ class Graph(object):
         #Need to reset x axis markers so they don't start and stop at ends...and revise end to end with data not axis
         #next work to fix now in drawing axis and data on x axis
         self.__set_axis_markers(self.x_axis)
-        self.__revise_high_low(self.x_axis)
+
+        # TODO: This has been dropped to not pad out x axis left and right....but there might be times when it's needed.  
+        # self.__revise_high_low(self.x_axis)
 
         self.__set_axis_markers(self.y_primary_axis)
         self.__revise_high_low(self.y_primary_axis)

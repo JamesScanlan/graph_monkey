@@ -133,9 +133,6 @@ class DateAxisLabelsCreator(AxisLabelsCreator):
         #axis_percentile = self.__calculate_date_percentile(current_day, maximum_day)
         #new_axis_markers.add_axis_marker(AxisMarker(axis_label, axis_percentile))        
         
-
-        print("self.high", self.high)
-
         exit_loop = False
         while exit_loop == False:
             increment_date = self.__get_next_interval_date(current_day, interval)

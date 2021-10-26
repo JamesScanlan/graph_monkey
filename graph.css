@@ -3,7 +3,8 @@
 
 text {
     text-anchor: middle;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif;
+    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
     /*fill: darkslategrey;*/
 }
 
@@ -37,7 +38,7 @@ text.legend_item {
 
 text.legend_item_highlighted {
     text-anchor: start;
-    font-weight: bold;
+    font-weight: bolder;
     font-size: 0.8em;
     text-anchor: start;
     cursor: pointer;
@@ -51,7 +52,7 @@ text.legend_item_highlighted {
 }
 
 .axis_title {
-    font-weight: bold;
+    font-weight: normal;
 }
 
 circle.point {
@@ -61,7 +62,7 @@ circle.point {
 }
 
 polyline {
-    stroke-width: 1;
+    stroke-width: 3;
 }
 
 
@@ -71,16 +72,16 @@ line.axis {
 }
 
 line {
-    stroke-width: 1;
+    stroke-width: 3;
     stroke: green;
 }
 
 line.highlighted {
-    stroke-width: 3;
+    stroke-width: 5;
 }
 
 polyline.highlighted {
-    stroke-width: 3;
+    stroke-width: 5;
 }
 
 
