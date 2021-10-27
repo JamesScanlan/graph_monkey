@@ -129,8 +129,7 @@ def graph_eight(graph, file_name):
     graph.y_axis_title = config.y_axis_config.title
 
 
-if __name__== "__main__":
-
+def orginal_callers():
     graph = svg_graph.Graph(900, 1600)
     
     #graph_one(graph)
@@ -171,7 +170,11 @@ if __name__== "__main__":
 
     #graph_seven(graph, 'data/video_start_failures.yaml')
     
-    graph_seven(graph, 'data/conviva_pivot.yaml')
+    #graph_seven(graph, 'data/conviva_pivot.yaml')
+    #graph_seven(graph, 'data/conviva_evbs.yaml')
+    #graph_seven(graph, 'data/conviva_vpf.yaml')
+    #graph_seven(graph, 'data/conviva_vsf.yaml')    
+    graph_seven(graph, 'data/aggregated_conviva_ebvs.yaml')
 
     graph.draw_graph() #False (hack to stop sorting)
 
@@ -185,4 +188,35 @@ if __name__== "__main__":
 
     with open("graph_output.html", "w") as file:
         file.write(web_page_creator.create_contents())
+
+
+def generate_conviva_graphs():
+    graphs = {'data':
+                [
+                    {'yaml': 'data/conviva_evbs.yaml', 'output': 'output/ebvs.html'},
+                    {'yaml': 'data/conviva_vpf.yaml', 'output': 'output/vpf.html'},
+                    {'yaml': 'data/conviva_vsf.yaml', 'output': 'output/vsf.html'},
+                    {'yaml': 'data/aggregated_conviva_ebvs.yaml', 'output': 'output/aggregated_ebvs.html'},
+                    {'yaml': 'data/aggregated_conviva_vpf.yaml', 'output': 'output/aggregated_vpf.html'},
+                    {'yaml': 'data/aggregated_conviva_vsf.yaml', 'output': 'output/aggregated_vsf.html'},
+                ]
+            }
+    for graph_data in graphs['data']:
+        graph = svg_graph.Graph(900, 1600)
+        graph_seven(graph, graph_data['yaml'])
+
+        graph.draw_graph()
+
+        web_page_creator = WebPageCreator()
+        web_page_creator.add_script_reference('graph.js')
+        web_page_creator.add_stylesheet('graph.css')
+        
+        web_page_creator.add_contents(graph_layout_wrapper.wrap_contents_for_layout(graph.svg_contents, graph.svg_legend_title_contents, graph.svg_legend_contents))
+        
+        with open(graph_data['output'], "w") as file:
+            file.write(web_page_creator.create_contents())
+
+if __name__== "__main__":
+    # orginal_callers()
+    generate_conviva_graphs()
 

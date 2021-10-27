@@ -31,7 +31,7 @@ text {
 text.legend_item {
     text-anchor: start;
     font-weight: normal;
-    font-size: 0.8em;
+    font-size: 0.9em;
     text-anchor: start;
     cursor: pointer;
 }
@@ -39,7 +39,7 @@ text.legend_item {
 text.legend_item_highlighted {
     text-anchor: start;
     font-weight: bolder;
-    font-size: 0.8em;
+    font-size: 0.9em;
     text-anchor: start;
     cursor: pointer;
 }
@@ -47,7 +47,7 @@ text.legend_item_highlighted {
 .legend_item.title {
     text-anchor: start;
     font-weight: bold;
-    font-size: 0.8em;
+    font-size: 0.9em;
     text-anchor: start;
 }
 

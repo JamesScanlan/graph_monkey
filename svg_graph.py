@@ -75,12 +75,12 @@ class Graph(object):
 
         rotated_labels = False
         if self.x_axis.markers != None:
-            for counter in range(0, len(self.x_axis.markers) ) :#-1
+            for counter in range(0, len(self.x_axis.markers)-1 ) :#-1
                 start_point = Point(self.left_margin + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height)
                 end_point = Point(self.left_margin + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height + 15)
                 self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
 
-                start_point = Point(self.left_margin -5 + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height + 30)
+                start_point = Point(self.left_margin +5 + (self.x_axis.markers[counter].percentile * self.width), self.top_margin + self.height + 30)
                 rotation = 0
                 y_position = self.top_margin + self.height + 30
                 if str(self.x_axis.markers[counter].marker.label).find(' ') > -1:

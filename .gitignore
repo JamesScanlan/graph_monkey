@@ -1,5 +1,6 @@
 *.html
 data/
+output/
 __pycache__/
 *.pyc
 api_monkey.py
