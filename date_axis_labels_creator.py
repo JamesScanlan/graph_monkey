@@ -138,8 +138,7 @@ class DateAxisLabelsCreator(AxisLabelsCreator):
             increment_date = self.__get_next_interval_date(current_day, interval)
 
             axis_label = AxisLabel(increment_date, increment_date.strftime("%d/%m/%Y"))
-            # if str(axis_label) == '01/09/2020':
-            #     hello='bongo'
+
             axis_percentile = self.__calculate_date_percentile(increment_date, maximum_day)
 
             new_axis_markers.add_axis_marker(AxisMarker(axis_label, axis_percentile))

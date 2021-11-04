@@ -27,11 +27,25 @@ class FloatAxisLabelsCreator(AxisLabelsCreator):
         if value_range / indicative_interval > 15:
             indicative_interval = indicative_interval * 10
         return indicative_interval 
-        
+
+    def __determine_high_value(self, interval):
+        value = self.high
+
+        if value == interval:
+            return value
+        elif value > interval:
+            return value + (interval - (value % interval))
+        else:
+            return interval
+         
+    
     def __create_axis_markers(self):
         interval = self.__determine_interval(self.low, self.high - self.low)
         interval_scale = len(str(FloatParser(interval).frac_part))
         format_string = "{:." + str(interval_scale) + "f}"
+
+        revised_high_level = self.__determine_high_value(interval)
+
 
         new_axis_markers = AxisMarkers()
 
@@ -39,7 +53,8 @@ class FloatAxisLabelsCreator(AxisLabelsCreator):
         value = float(format_string.format(self.low))
         while exit_loop == False:
             axis_label = AxisLabel(value, str(value))
-            axis_percentile = (axis_label.value - self.low) / (self.high - self.low)
+            axis_percentile = (axis_label.value - self.low) / (revised_high_level - self.low) #(axis_label.value - self.low) / (self.high - self.low)
+
             new_axis_markers.add_axis_marker(AxisMarker(axis_label, axis_percentile))
             value += interval
             value = float(format_string.format(value))

@@ -119,6 +119,7 @@ class Graph(object):
             return position - adjustment
 
     def __new_draw_y_axis(self, axis, axis_position, reverse):
+        
         start_point = Point(axis_position, self.top_margin + self.height)
         end_point = Point(axis_position, self.top_margin)
         self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
@@ -192,6 +193,7 @@ class Graph(object):
                 end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height))
                 self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
 
+
                 label_point = Point(self.__handle_reverse(reverse, axis_position, 65), (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height) + 5)
                 self.svg_contents += svg_monkey.write_text(label_point, self.__format_axis_label_for_date(axis.markers[counter].marker.value, self.x_axis_format),0,'y_axis_label')
         self.__draw_y_axis_title(axis, 150)
@@ -227,6 +229,8 @@ class Graph(object):
         self.__draw_y_axis_title(axis, 150)
 
     def __draw_y_axis_for_float(self, axis, axis_position, reverse):
+        # print(axis.low, axis.high)
+        # print(len(axis.markers))
         start_point = Point(axis_position, self.top_margin + self.height)
         end_point = Point(axis_position, self.top_margin)
         self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
@@ -237,9 +241,11 @@ class Graph(object):
             css_label = css_label + '_reverse'
 
         if axis.markers != None:
-            for counter in range(0, len(axis.markers) - 1):
+            for counter in range(0, len(axis.markers) ): #-1
                 start_point = Point(axis_position, (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height))
                 end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height))
+                
+                #print(str(start_point.x) + ',' +  str(start_point.y) + ',' + str(axis.markers[counter].percentile) + ',"' + str(axis.markers[counter].marker.value) + '"')
                 
                 self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
 
