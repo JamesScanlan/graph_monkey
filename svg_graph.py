@@ -1,3 +1,4 @@
+from axis_config import AxisPadding
 import svg_monkey
 from svg_point import Point
 import bubblesort
@@ -30,6 +31,7 @@ class Graph(object):
         self.x_axis_format = None # why only one format
         self.y_primary_axis = None
         self.y_secondary_axis = None
+        self.y_axis_padding = None
         self.data_sets = GraphDataSets()
         self.additional_axis_meta_data = None
         self.x_axis_title = ''
@@ -245,7 +247,7 @@ class Graph(object):
                 start_point = Point(axis_position, (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height))
                 end_point = Point(self.__handle_reverse(reverse, axis_position, 15), (self.top_margin + self.height) - (axis.markers[counter].percentile * self.height))
                 
-                #print(str(start_point.x) + ',' +  str(start_point.y) + ',' + str(axis.markers[counter].percentile) + ',"' + str(axis.markers[counter].marker.value) + '"')
+                # print(str(start_point.x) + ',' +  str(start_point.y) + ',' + str(axis.markers[counter].percentile) + ',"' + str(axis.markers[counter].marker.value) + '"')
                 
                 self.svg_contents += svg_monkey.write_line(start_point, end_point, 'Black', 'axis')
 
@@ -267,14 +269,11 @@ class Graph(object):
         points = []
         for data_item in data_set:
             x = self.left_margin + round((((data_item.key - self.x_axis.low) / (self.x_axis.high - self.x_axis.low)) * self.width),2)
-            # if data_item.key == datetime.date(2020,8,9):
-
-            #     print(data_item.key, x, self.left_margin, self.width)
-            if data_item.value == 12256:
-                monkey = "go"
 
             y = self.top_margin + round(self.height - ((((data_item.value - y_axis.low) / (y_axis.high - y_axis.low)) * self.height)), 2)
             point = Point(x, y)
+            if data_item.value > 10.0:
+                print(data_item.value, str(point), self.height, self.top_margin)
             points.append(point)
 
         return points
@@ -355,10 +354,14 @@ class Graph(object):
                 if self.y_secondary_axis.low > 0:
                     self.y_secondary_axis.low = 0
 
-    def __revise_high_low(self, axis):
+    def __revise_high_low(self, axis, padding = AxisPadding.DATA):
+        orginal_high = axis.high
         if axis.markers is not None:
-            axis.low = axis.markers[0].marker.value
-            axis.high = axis.markers[len(axis.markers)-1].marker.value
+            if padding == AxisPadding.PADDING:
+                axis.low = axis.markers[0].marker.value
+                axis.high = axis.markers[len(axis.markers)-1].marker.value
+
+                axis.revised_high = orginal_high
 
     def __determine_y_axes(self):
         lowest_primary_y_value = None
@@ -431,21 +434,23 @@ class Graph(object):
 
         #Need to reset x axis markers so they don't start and stop at ends...and revise end to end with data not axis
         #next work to fix now in drawing axis and data on x axis
-        self.__set_axis_markers(self.x_axis)
+        self.__set_axis_markers(self.x_axis, None) #TODO: X?
 
         # TODO: This has been dropped to not pad out x axis left and right....but there might be times when it's needed.  
         # self.__revise_high_low(self.x_axis)
 
-        self.__set_axis_markers(self.y_primary_axis)
-        self.__revise_high_low(self.y_primary_axis)
+        self.__set_axis_markers(self.y_primary_axis, self.y_axis_padding)
+        print(self.y_primary_axis.low, self.y_primary_axis.high, self.y_primary_axis.revised_high)
+        self.__revise_high_low(self.y_primary_axis, self.y_axis_padding)
+        print(self.y_primary_axis.low, self.y_primary_axis.high, self.y_primary_axis.revised_high)
         if self.y_secondary_axis is not None:
-            self.__set_axis_markers(self.y_secondary_axis)
+            self.__set_axis_markers(self.y_secondary_axis, self.y_axis_padding)
             self.__revise_high_low(self.y_secondary_axis)
 
         if sort_data_sets == True:
             self.data_sets = sorted(self.data_sets)
 
-    def __set_axis_markers(self, axis):
+    def __set_axis_markers(self, axis, axis_padding):
         creator = None
 
         if axis.data_type is int:
@@ -459,7 +464,7 @@ class Graph(object):
         elif axis.data_type is TimeValue:
             creator = TimeValueAxisLabelsCreator
             
-        axis.markers = creator(axis.low, axis.high, axis.markers_format).axis_markers
+        axis.markers = creator(axis.low, axis.high, axis.markers_format, axis_padding).axis_markers
 
     def __write_point_markers(self, points, display_markers=True, display_labels=True, color="", label = ""):
         point = None

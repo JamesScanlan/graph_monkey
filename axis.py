@@ -4,6 +4,7 @@ class Axis(object):
     def __init__(self, low, high, data_type, format, title = ''):
         self.low = low
         self.high = high
+        self.revised_high = high
         self.title = ''
         self.markers = None
         self.markers_format = format

@@ -1,7 +1,26 @@
+from enum import Enum
+
+class AxisPadding(Enum):
+    DATA = 1
+    PADDING = 2
+
+
 class AxisConfig(object):
-    def __init__(self, title):
+
+    def __parse_padding(self, padding):
+        if padding != 'Not Set':
+            if padding == 'Data':
+                return AxisPadding.DATA
+            if padding == 'Padding':
+                return AxisPadding.PADDING
+        
+        return AxisPadding.DATA
+
+
+    def __init__(self, title, padding = 'Not Set'):
         self.title = title
         self.axis_config_items = []
+        self.padding = self.__parse_padding(padding)
 
     def add_axis_config_item(self, axis_config_item):
         self.axis_config_items.append(axis_config_item)

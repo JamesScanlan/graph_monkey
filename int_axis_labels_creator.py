@@ -5,8 +5,8 @@ from axis_marker import AxisMarker
 
 class IntAxisLabelsCreator(AxisLabelsCreator):
 
-    def __init__(self, low, high, format):
-        super().__init__(low, high, format)
+    def __init__(self, low, high, format, padding):
+        super().__init__(low, high, format, padding)
         self.__create_axis_markers()
 
     def __zero_pad(self, instances):

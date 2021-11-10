@@ -1,3 +1,7 @@
+function monkey() {
+    window.alert('Monkey');
+}
+
 function highlight_line(id) {
       
     if (document.getElementById(id).getAttribute("class") == "highlighted") {

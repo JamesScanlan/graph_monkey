@@ -1,3 +1,4 @@
+from axis_config import AxisPadding
 from axis_label import AxisLabel
 from axis_labels_creator import AxisLabelsCreator
 from float_parser import FloatParser
@@ -6,8 +7,8 @@ from axis_marker import AxisMarker
 
 class FloatAxisLabelsCreator(AxisLabelsCreator):
 
-    def __init__(self, low, high, format):
-        super().__init__(low, high, format)
+    def __init__(self, low, high, format, padding):
+        super().__init__(low, high, format, padding)
         #self.__set_axis_labels()
         self.__create_axis_markers()
 
@@ -38,14 +39,27 @@ class FloatAxisLabelsCreator(AxisLabelsCreator):
         else:
             return interval
          
-    
+    #def __determine_high_value2(self, interval):
+
+
     def __create_axis_markers(self):
         interval = self.__determine_interval(self.low, self.high - self.low)
         interval_scale = len(str(FloatParser(interval).frac_part))
+
+
         format_string = "{:." + str(interval_scale) + "f}"
 
-        revised_high_level = self.__determine_high_value(interval)
 
+        if self.padding == AxisPadding.DATA:
+            revised_high_level = self.high
+        else:
+            revised_high_level = self.__determine_high_value(interval) #not sure about this high value call...it's infalating about...do we need to pick a round number?
+        #revised_high_level = self.high #this was there to stop 101%
+
+        if interval_scale == 1 and revised_high_level > 20:
+            interval = interval * 10 
+        # if revised_high_level / interval_scale == revised_high_level:
+        #     interval = interval * 10
 
         new_axis_markers = AxisMarkers()
 
@@ -58,6 +72,6 @@ class FloatAxisLabelsCreator(AxisLabelsCreator):
             new_axis_markers.add_axis_marker(AxisMarker(axis_label, axis_percentile))
             value += interval
             value = float(format_string.format(value))
-            if value > (self.high + interval):
+            if value > revised_high_level: #self.high: #(self.high + interval)
                 exit_loop = True
         self.axis_markers = new_axis_markers

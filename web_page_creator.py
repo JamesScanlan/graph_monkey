@@ -19,6 +19,7 @@ class WebPageCreator(object):
     def create_contents(self):
         contents = self.__top 
         contents += self.__head + html_monkey.write_head_end()
+        contents += html_monkey.write_body_start()
         contents += self.__body + html_monkey.write_body_end()
         contents += self.__bottom
         

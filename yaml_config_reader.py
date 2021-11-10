@@ -34,7 +34,8 @@ class YAMLConfigReader(object):
                 self.__read_axis_config_item(self.x_axis_config, document['x']['indexes'])
                 
                 self.__handle_y_axes(document)                
-                self.y_axis_config = AxisConfig(self.__navigate_path(document,'y','title'))
+                self.y_axis_config = AxisConfig(self.__navigate_path(document,'y','title'), self.__navigate_path(document,'y','padding'))
+                print('padding', self.__navigate_path(document,'y','padding'))
                 self.__read_axis_config_item(self.y_axis_config, document['y']['indexes'])    
                 
 

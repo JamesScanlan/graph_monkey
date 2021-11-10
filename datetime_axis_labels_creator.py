@@ -6,8 +6,8 @@ from axis_marker import AxisMarker
 
 class DateTimeAxisLabelsCreator(AxisLabelsCreator):
 
-    def __init__(self, low, high, format):
-        super().__init__(low, high, format)
+    def __init__(self, low, high, format, padding):
+        super().__init__(low, high, format, padding)
         self.__create_axis_markers()
 
     def __deterimine_interval(self, reference_datetime, datetime_range):

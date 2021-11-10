@@ -6,8 +6,10 @@ from axis_marker import AxisMarker
 
 class TimeValueAxisLabelsCreator(AxisLabelsCreator):
 
-    def __init__(self, low, high):
-        super().__init__(low, high)
+    def __init__(self, low, high, format, padding):
+        super().__init__(low, high, format, padding)
+        # def __init__(self, low, high):
+        #     super().__init__(low, high)
         self.__create_axis_markers()
         #self.__set_axis_labels()
         #self.__display_axis_labels()

@@ -87,6 +87,7 @@ def graph_seven(graph, file_name):
     graph.x_axis_format = config.x_axis_config.axis_config_items[0].output_format
     graph.x_axis_title = config.x_axis_config.title
     graph.y_axis_title = config.y_axis_config.title
+    graph.y_axis_padding = config.y_axis_config.padding
 
 def get_axis_type(config, y_values_name):
     if config.y_axis_config.get_axis_config_item(y_values_name) == None:
@@ -174,7 +175,9 @@ def orginal_callers():
     #graph_seven(graph, 'data/conviva_evbs.yaml')
     #graph_seven(graph, 'data/conviva_vpf.yaml')
     #graph_seven(graph, 'data/conviva_vsf.yaml')    
-    graph_seven(graph, 'data/aggregated_conviva_ebvs.yaml')
+    #graph_seven(graph, 'data/aggregated_conviva_ebvs.yaml')
+    graph_seven(graph, 'data/amazonfire_vpf.yaml')
+
 
     graph.draw_graph() #False (hack to stop sorting)
 
@@ -216,7 +219,61 @@ def generate_conviva_graphs():
         with open(graph_data['output'], "w") as file:
             file.write(web_page_creator.create_contents())
 
+def generate_amazon_fire_conviva_graphs():
+    graphs = {'data':
+                [
+                    {'yaml': 'data/amazonfire_vpf.yaml', 'output': 'output/amazonfire_vpf.html'},
+                    {'yaml': 'data/amazonfire_vsf.yaml', 'output': 'output/amazonfire_vsf.html'},
+                    {'yaml': 'data/amazonfire_ebvs.yaml', 'output': 'output/amazonfire_ebvs.html'}
+                ]
+            }
+    for graph_data in graphs['data']:
+        graph = svg_graph.Graph(900, 1600)
+        graph_seven(graph, graph_data['yaml'])
+
+        graph.draw_graph()
+
+        web_page_creator = WebPageCreator()
+        web_page_creator.add_script_reference('graph.js')
+        web_page_creator.add_stylesheet('graph.css')
+        
+        web_page_creator.add_contents(graph_layout_wrapper.wrap_contents_for_layout(graph.svg_contents, graph.svg_legend_title_contents, graph.svg_legend_contents))
+        
+        with open(graph_data['output'], "w") as file:
+            file.write(web_page_creator.create_contents())
+
+def generate_baselined_amazon_fire_conviva_graphs():
+    graphs = {'data':
+                [
+                    {'yaml': 'data/baselined_amazonfire_vpf.yaml', 'output': 'output/baselined_amazonfire_vpf.html'},
+                    {'yaml': 'data/baselined_amazonfire_vsf.yaml', 'output': 'output/baselined_amazonfire_vsf.html'},
+                    {'yaml': 'data/baselined_amazonfire_ebvs.yaml', 'output': 'output/baselined_amazonfire_ebvs.html'}
+                ]
+             }
+    # graphs = {'data':
+    #         [
+    #             {'yaml': 'data/baselined_amazonfire_ebvs.yaml', 'output': 'output/baselined_amazonfire_ebvs.html'}
+    #         ]
+    #     }
+    for graph_data in graphs['data']:
+        graph = svg_graph.Graph(900, 1600)
+        graph_seven(graph, graph_data['yaml'])
+
+        graph.draw_graph()
+
+        web_page_creator = WebPageCreator()
+        web_page_creator.add_script_reference('graph.js')
+        web_page_creator.add_stylesheet('graph.css')
+        
+        web_page_creator.add_contents(graph_layout_wrapper.wrap_contents_for_layout(graph.svg_contents, graph.svg_legend_title_contents, graph.svg_legend_contents))
+        
+        with open(graph_data['output'], "w") as file:
+            file.write(web_page_creator.create_contents())
+
 if __name__== "__main__":
-    # orginal_callers()
-    generate_conviva_graphs()
+    #orginal_callers()
+    #generate_conviva_graphs()
+    
+    # generate_amazon_fire_conviva_graphs()
+    generate_baselined_amazon_fire_conviva_graphs()
 
