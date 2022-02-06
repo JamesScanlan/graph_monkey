@@ -46,9 +46,17 @@ class FloatAxisLabelsCreator(AxisLabelsCreator):
         interval = self.__determine_interval(self.low, self.high - self.low)
         interval_scale = len(str(FloatParser(interval).frac_part))
 
+        if interval_scale ==1 and self.high > 20.0 : #== 1 and revised_high_level > 20:
+            interval = interval * 10 
+        # if revised_high_level / interval_scale == revised_high_level:
+        #     interval = interval * 10
 
         format_string = "{:." + str(interval_scale) + "f}"
 
+        # if interval_scale == 1 and revised_high_level > 20:
+        #     interval = interval * 10 
+        # # if revised_high_level / interval_scale == revised_high_level:
+        # #     interval = interval * 10
 
         if self.padding == AxisPadding.DATA:
             revised_high_level = self.high
@@ -56,10 +64,7 @@ class FloatAxisLabelsCreator(AxisLabelsCreator):
             revised_high_level = self.__determine_high_value(interval) #not sure about this high value call...it's infalating about...do we need to pick a round number?
         #revised_high_level = self.high #this was there to stop 101%
 
-        if interval_scale == 1 and revised_high_level > 20:
-            interval = interval * 10 
-        # if revised_high_level / interval_scale == revised_high_level:
-        #     interval = interval * 10
+
 
         new_axis_markers = AxisMarkers()
 

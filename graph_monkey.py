@@ -176,9 +176,12 @@ def orginal_callers():
     #graph_seven(graph, 'data/conviva_vpf.yaml')
     #graph_seven(graph, 'data/conviva_vsf.yaml')    
     #graph_seven(graph, 'data/aggregated_conviva_ebvs.yaml')
-    graph_seven(graph, 'data/amazonfire_vpf.yaml')
-
-
+    #graph_seven(graph, 'data/amazonfire_vpf.yaml')
+    #graph_seven(graph, 'data/dotcom_errors_2021_by_error_proivder.yaml')
+    #graph_seven(graph, 'data/dotcom_errors_2021_b
+    # y_error_proivder_as_percentages.yaml')
+    graph_seven(graph, 'data/082-MEDIA-ERR-UNKNOWN.yaml')
+    
     graph.draw_graph() #False (hack to stop sorting)
 
 
@@ -193,6 +196,70 @@ def orginal_callers():
         file.write(web_page_creator.create_contents())
 
 
+def generate_2021_graphs():
+    graphs = {'data':
+                [
+                    {'yaml': 'data/082-MEDIA-ERR-UNKNOWN.yaml', 'output': 'output/082-MEDIA-ERR-UNKNOWN.html'},
+                    {'yaml': 'data/082-MEDIA-ERR-UNKNOWN_by_provider.yaml', 'output': 'output/082-MEDIA-ERR-UNKNOWN_by_provider.html'},
+                    {'yaml': 'data/trawl.yaml', 'output': 'output/trawl.html'},
+                    {'yaml': 'data/monkey.yaml', 'output': 'output/all_4_errors_by_day.html'},
+                    {'yaml': 'data/all_4_errors_without_bsd.yaml', 'output': 'output/all_4_errors_by_day_without_bsd.html'},
+                    {'yaml': 'data/all_4_errors_by_error_provider.yaml', 'output': 'output/errors_by_error_provider.html'},
+                    {'yaml': 'data/all_4_blended_errors_by_week.yaml', 'output': 'output/all_4_blended_errors_by_week.html'},
+                    {'yaml': 'data/all_4_blended_errors_by_month.yaml', 'output': 'output/all_4_blended_errors_by_month.html'},
+                    {'yaml': 'data/all_4_blended_errors_by_day.yaml', 'output': 'output/all_4_blended_errors_by_day.html'},
+                    {'yaml': 'data/all_4_error_counts_android_error_providers.yaml', 'output': 'output/all_4_android_error_providers.html'},
+                    {'yaml': 'data/all_4_error_counts_big_screen_error_providers.yaml', 'output': 'output/all_4_big_screen_error_providers.html'},
+                    {'yaml': 'data/all_4_error_counts_dotcom_error_providers.yaml', 'output': 'output/all_4_dotcom_error_providers.html'},
+                    {'yaml': 'data/all_4_error_counts_ios_error_providers.yaml', 'output': 'output/all_4_ios_error_providers.html'},
+                    {'yaml': 'data/january_comparison.yaml', 'output': 'output/january_comparison.html'}
+                ]
+            }
+
+
+    for graph_data in graphs['data']:
+        graph = svg_graph.Graph(900, 1600)
+        graph_seven(graph, graph_data['yaml'])
+
+        graph.draw_graph()
+
+        web_page_creator = WebPageCreator()
+        web_page_creator.add_script_reference('graph.js')
+        web_page_creator.add_stylesheet('graph.css')
+        
+        web_page_creator.add_contents(graph_layout_wrapper.wrap_contents_for_layout(graph.svg_contents, graph.svg_legend_title_contents, graph.svg_legend_contents))
+        
+        with open(graph_data['output'], "w") as file:
+            file.write(web_page_creator.create_contents())
+
+
+def generate_test_graphs():
+    graphs = {'data':
+                [
+                    {'yaml': 'data/test_01_data.yaml', 'output': 'output/test_01.html'},
+                    {'yaml': 'data/test_02_data.yaml', 'output': 'output/test_02.html'},
+                    {'yaml': 'data/test_02b_data.yaml', 'output': 'output/test_02b.html'},
+                    {'yaml': 'data/test_03_data.yaml', 'output': 'output/test_03.html'},
+                    {'yaml': 'data/test_04_data.yaml', 'output': 'output/test_04.html'}
+                ]
+            }
+
+
+    for graph_data in graphs['data']:
+        graph = svg_graph.Graph(900, 1600)
+        graph_seven(graph, graph_data['yaml'])
+
+        graph.draw_graph()
+
+        web_page_creator = WebPageCreator()
+        web_page_creator.add_script_reference('graph.js')
+        web_page_creator.add_stylesheet('graph.css')
+        
+        web_page_creator.add_contents(graph_layout_wrapper.wrap_contents_for_layout(graph.svg_contents, graph.svg_legend_title_contents, graph.svg_legend_contents))
+        
+        with open(graph_data['output'], "w") as file:
+            file.write(web_page_creator.create_contents())
+
 def generate_conviva_graphs():
     graphs = {'data':
                 [
@@ -202,8 +269,16 @@ def generate_conviva_graphs():
                     {'yaml': 'data/aggregated_conviva_ebvs.yaml', 'output': 'output/aggregated_ebvs.html'},
                     {'yaml': 'data/aggregated_conviva_vpf.yaml', 'output': 'output/aggregated_vpf.html'},
                     {'yaml': 'data/aggregated_conviva_vsf.yaml', 'output': 'output/aggregated_vsf.html'},
+                    {'yaml': 'data/conviva_live_pivot.yaml', 'output': 'output/conviva_dotcom_live.html'}
                 ]
             }
+
+    # graphs = {'data':
+    #             [
+    #                 {'yaml': 'data/conviva_live_pivot.yaml', 'output': 'output/conviva_dotcom_live.html'}
+    #             ]
+    #         }
+
     for graph_data in graphs['data']:
         graph = svg_graph.Graph(900, 1600)
         graph_seven(graph, graph_data['yaml'])
@@ -270,10 +345,71 @@ def generate_baselined_amazon_fire_conviva_graphs():
         with open(graph_data['output'], "w") as file:
             file.write(web_page_creator.create_contents())
 
+def generate_dotcom_error_graphs():
+    graphs = {'data':
+                [
+                    {'yaml': 'data/dotcom_errors_2021_by_error_proivder.yaml', 'output': 'output/dotcom_errors_by_provider.html'},
+                    {'yaml': 'data/dotcom_errors_2021_by_error_proivder_as_percentages.yaml', 'output': 'output/dotcom_errors_by_provider_percentages.html'},
+                    {'yaml': 'data/dotcom_errors_2021_by_errors.yaml',  'output': 'output/dotcom_errors_by_errors.html'},
+                    {'yaml': 'data/dotcom_errors_2021_by_top_10_errors.yaml', 'output': 'output/dotcom_errors_by_top_10_errors.html'},
+                    {'yaml': 'data/dotcom_errors_2021_by_top_5_errors.yaml', 'output': 'output/dotcom_errors_by_top_5_errors.html'},
+                    {'yaml': 'data/dotcom_errors_2021_by_error.yaml', 'output': 'output/dotcom_errors_by_error.html'}
+                ]
+             }
+    for graph_data in graphs['data']:
+        graph = svg_graph.Graph(900, 1600)
+        graph_seven(graph, graph_data['yaml'])
+
+        graph.draw_graph()
+
+        web_page_creator = WebPageCreator()
+        web_page_creator.add_script_reference('graph.js')
+        web_page_creator.add_stylesheet('graph.css')
+        
+        web_page_creator.add_contents(graph_layout_wrapper.wrap_contents_for_layout(graph.svg_contents, graph.svg_legend_title_contents, graph.svg_legend_contents))
+        
+        with open(graph_data['output'], "w") as file:
+            file.write(web_page_creator.create_contents())
+
+def generate_android_conviva_graphs():
+    graphs = {'data':
+                [
+                    {'yaml': 'data/ANDROID-VOD_vpf.yaml', 'output': 'output/android_vpf.html'},
+                    {'yaml': 'data/ANDROID-VOD_vsf.yaml', 'output': 'output/android_vsf.html'},
+                    {'yaml': 'data/ANDROID-VOD_ebvs.yaml', 'output': 'output/android_ebvs.html'},
+                    {'yaml': 'data/baselined_ANDROID-VOD_vpf.yaml', 'output': 'output/baselined_android_vpf.html'},
+                    {'yaml': 'data/baselined_ANDROID-VOD_vsf.yaml', 'output': 'output/baselined_android_vsf.html'},
+                    {'yaml': 'data/baselined_ANDROID-VOD_ebvs.yaml', 'output': 'output/baselined_android_ebvs.html'}
+                ]
+            }
+    for graph_data in graphs['data']:
+        graph = svg_graph.Graph(900, 1600)
+        graph_seven(graph, graph_data['yaml'])
+
+        graph.draw_graph()
+
+        web_page_creator = WebPageCreator()
+        web_page_creator.add_script_reference('graph.js')
+        web_page_creator.add_stylesheet('graph.css')
+        
+        web_page_creator.add_contents(graph_layout_wrapper.wrap_contents_for_layout(graph.svg_contents, graph.svg_legend_title_contents, graph.svg_legend_contents))
+        
+        with open(graph_data['output'], "w") as file:
+            file.write(web_page_creator.create_contents())
+
+
 if __name__== "__main__":
     #orginal_callers()
-    #generate_conviva_graphs()
-    
-    # generate_amazon_fire_conviva_graphs()
-    generate_baselined_amazon_fire_conviva_graphs()
 
+    #Generate Conviva Data
+    # generate_conviva_graphs()
+    # generate_amazon_fire_conviva_graphs()
+    # generate_baselined_amazon_fire_conviva_graphs()
+
+    # generate_dotcom_error_graphs()
+
+    #generate_android_conviva_graphs()
+
+    generate_2021_graphs()
+
+    generate_test_graphs()

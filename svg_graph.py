@@ -272,8 +272,8 @@ class Graph(object):
 
             y = self.top_margin + round(self.height - ((((data_item.value - y_axis.low) / (y_axis.high - y_axis.low)) * self.height)), 2)
             point = Point(x, y)
-            if data_item.value > 10.0:
-                print(data_item.value, str(point), self.height, self.top_margin)
+            # if data_item.value == 942104:
+            #     print(data_item.value, str(point), self.height, self.top_margin)
             points.append(point)
 
         return points
@@ -362,6 +362,12 @@ class Graph(object):
                 axis.high = axis.markers[len(axis.markers)-1].marker.value
 
                 axis.revised_high = orginal_high
+
+            if axis.high < axis.markers[len(axis.markers)-1].marker.value:
+                axis.low = axis.markers[0].marker.value
+                axis.high = axis.markers[len(axis.markers)-1].marker.value
+
+                axis.revised_high = orginal_high #not sure what this is doing
 
     def __determine_y_axes(self):
         lowest_primary_y_value = None
@@ -521,7 +527,7 @@ class Graph(object):
         self.svg_legend_title_contents += svg_monkey.write_svg_end()
 
     def draw_legend(self):
-        self.svg_legend_contents = svg_monkey.write_svg_start(160, self.__calculate_legend_svg_height() + 10)
+        self.svg_legend_contents = svg_monkey.write_svg_start(200, self.__calculate_legend_svg_height() + 10)
         self.svg_legend_contents += self.__build_legend_contents(30, copy.copy(self.primary_colours_palete), copy.copy(self.secondary_colours_palete))
         self.svg_legend_contents += svg_monkey.write_svg_end()
 
