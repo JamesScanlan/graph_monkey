@@ -208,16 +208,26 @@ def generate_2021_graphs():
                     {'yaml': 'data/all_4_blended_errors_by_week.yaml', 'output': 'output/all_4_blended_errors_by_week.html'},
                     {'yaml': 'data/all_4_blended_errors_by_month.yaml', 'output': 'output/all_4_blended_errors_by_month.html'},
                     {'yaml': 'data/all_4_blended_errors_by_day.yaml', 'output': 'output/all_4_blended_errors_by_day.html'},
+                    {'yaml': 'data/all_4_blended_errors_by_day_2022.yaml', 'output': 'output/all_4_blended_errors_by_day_2022.html'},
                     {'yaml': 'data/all_4_error_counts_android_error_providers.yaml', 'output': 'output/all_4_android_error_providers.html'},
                     {'yaml': 'data/all_4_error_counts_big_screen_error_providers.yaml', 'output': 'output/all_4_big_screen_error_providers.html'},
                     {'yaml': 'data/all_4_error_counts_dotcom_error_providers.yaml', 'output': 'output/all_4_dotcom_error_providers.html'},
                     {'yaml': 'data/all_4_error_counts_ios_error_providers.yaml', 'output': 'output/all_4_ios_error_providers.html'},
-                    {'yaml': 'data/january_comparison.yaml', 'output': 'output/january_comparison.html'}
+                    {'yaml': 'data/january_comparison.yaml', 'output': 'output/january_comparison.html'},
+                    {'yaml': 'data/year_on_year_comparison.yaml', 'output': 'output/year_on_year_comparison.html'},
+                    {'yaml': 'data/dotcom_errors_by_error_provider.yaml', 'output': 'output/dotcom_errors_by_error_provider.html'},
+                    {'yaml': 'data/dotcom_errors.yaml', 'output': 'output/dotcom_errors.html'},
+                    {'yaml': 'data/dotcom_errors_DOTCOM.yaml', 'output': 'output/dotcom_errors_DOTCOM.html'},
+                    {'yaml': 'data/dotcom_errors_CS.yaml', 'output': 'output/dotcom_errors_CS.html'},
+                    {'yaml': 'data/dotcom_errors_CONTENT_OPERATIONS.yaml', 'output': 'output/dotcom_errors_CONTENT_OPERATIONS.html'},
+                    {'yaml': 'data/dotcom_errors_LICENSE_SERVER.yaml', 'output': 'output/dotcom_errors_LICENSE_SERVER.html'}
+                    #{'yaml': 'data/dotcom_errors_hunt.yaml', 'output': 'output/dotcom_errors_hunt.html'}
                 ]
             }
 
 
     for graph_data in graphs['data']:
+        print(graph_data['yaml'])
         graph = svg_graph.Graph(900, 1600)
         graph_seven(graph, graph_data['yaml'])
 

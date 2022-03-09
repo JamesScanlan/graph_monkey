@@ -17,7 +17,7 @@ class DateAxisLabelsCreator(AxisLabelsCreator):
                 interval = "Year"
             else:
                 interval = "Month"
-        elif date_range.days > self.__get_days_in_month(reference_date):
+        elif date_range.days > (self.__get_days_in_month(reference_date)) * 2:
             interval = "Month"
         elif date_range.days > 15:
             interval = "Week"

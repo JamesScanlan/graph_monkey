@@ -15,16 +15,16 @@ def write_circle(point, radius, color = 'black'):
     output += ' />'
     return output
 
-def write_text(point, text, text_angle = 0, css_class = '', color='white', id = None, javascript_hook = None):
+#TODO: this is a baaad hack
+def write_text(point, text, text_angle = 0, css_class = '', color='black', id = None, javascript_hook = None):
     output = '<text x="' + str(point.x) +'" y="' + str(point.y) + '" '
     if text_angle != 0:
         output += 'transform="rotate(' + str(text_angle) + ' ' + str(point.x) + ' ' + str(point.y) +')" '
-
     
     if css_class != '':
         output += 'class="' + css_class + '" '
 
-    output += ' fill="' + color + '" '
+    # output += ' fill="' + color + '" '
     
     if id != None:
         output += 'id="' + id + '" '
