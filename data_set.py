@@ -49,12 +49,19 @@ class DataSet(object):
         keys.sort(reverse = True)
         return keys[0]
 
+    def clean_values(self, values):
+        new_values = []
+        for value in values:
+            if value != None:
+                new_values.append(value)
+        return new_values
+
     def get_lowest_value(self):
-        values = self.get_values()
+        values = self.clean_values(self.get_values())
         values.sort()
         return values[0]
 
     def get_highest_value(self):
-        values = self.get_values()
+        values = self.clean_values(self.get_values())
         values.sort(reverse = True)
         return values[0]

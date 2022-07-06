@@ -28,15 +28,27 @@ class CSVFileReader(object):
                 if first_row == True:
                     first_row = False
                 else:
-                    self.__x_values.append(self.__parse_value(row[x_axis_config.axis_config_items[0].index], x_axis_config.axis_config_items[0].data_type, x_axis_config.axis_config_items[0].input_format))
+                    parsed_value = self.__parse_value(row[x_axis_config.axis_config_items[0].index], x_axis_config.axis_config_items[0].data_type, x_axis_config.axis_config_items[0].input_format)
+                    if parsed_value != None:
+                        self.__x_values.append(parsed_value)
+                    else:
+                        print('bingo')
                     for y_axis_config_item in y_axis_config.axis_config_items:
-                        y_values[y_axis_config_item.name].add(self.__parse_value(row[y_axis_config_item.index], y_axis_config_item.data_type, y_axis_config_item.input_format))
+                        parsed_value = self.__parse_value(row[y_axis_config_item.index], y_axis_config_item.data_type, y_axis_config_item.input_format)
+                        if parsed_value != None:
+                            y_values[y_axis_config_item.name].add(parsed_value)
+                        else:
+                            print('bongo')
+                    
 
             for y_values_set in y_values:
                 self.__y_values.append(y_values[y_values_set])
-                    
+        
+        bongo = 1
 
     def __parse_value(self, value, datatype, format = None):
+        if value == 'Null':
+            return None
         if datatype is int:
             return self.__parse_int(value)
         if datatype is float:

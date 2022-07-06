@@ -268,13 +268,14 @@ class Graph(object):
 
         points = []
         for data_item in data_set:
-            x = self.left_margin + round((((data_item.key - self.x_axis.low) / (self.x_axis.high - self.x_axis.low)) * self.width),2)
+            if data_item.value != None:
+                x = self.left_margin + round((((data_item.key - self.x_axis.low) / (self.x_axis.high - self.x_axis.low)) * self.width),2)
 
-            y = self.top_margin + round(self.height - ((((data_item.value - y_axis.low) / (y_axis.high - y_axis.low)) * self.height)), 2)
-            point = Point(x, y)
-            # if data_item.value == 942104:
-            #     print(data_item.value, str(point), self.height, self.top_margin)
-            points.append(point)
+                y = self.top_margin + round(self.height - ((((data_item.value - y_axis.low) / (y_axis.high - y_axis.low)) * self.height)), 2)
+                point = Point(x, y)
+                # if data_item.value == 942104:
+                #     print(data_item.value, str(point), self.height, self.top_margin)
+                points.append(point)
 
         return points
 
